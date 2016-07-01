@@ -1,0 +1,9 @@
+node_modules/
+dist/
+static/
+.browserify-cache/
+.git
+.sass-cache/
+.txt
+*__pycache__/
+secret.py

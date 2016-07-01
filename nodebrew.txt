@@ -1,0 +1,20 @@
+ログイン画面はspaではない
+
+サインアップ
+twitter 
+既存 true/false
+サインイン　api
+true ->サインイン
+false -> signup/エラー処理
+
+twitter id dbに保存
+リダイレクト
+
+サインイン
+twitter id db参照 true/false
+true -> success
+false -> エラー処理/サインアップする？モーダルウィンドう
+
+
+
+
