@@ -178,6 +178,7 @@ gulp.task('watch', (cb) => {
         proxy: 'http://localhost:1234',
         port: 4321,
         notify: true,
+        open:'external'
     });
     $.watch([path.public + '**/*.html'], function(cb) {
         seq('mv:html',browserSync.reload);

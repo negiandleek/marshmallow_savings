@@ -3,9 +3,9 @@ import React from "react";
 class Landing extends React.Component{
 	constructor(props){
 		super(props);
-		this.sign_action = this.sign_action.bind(this);
+		this.auth_action = this.auth_action.bind(this);
 	}
-	sign_action(){
+	auth_action(){
 		this.props.auth_action();
 	}
 	render(){
@@ -21,7 +21,7 @@ class Landing extends React.Component{
 							className="form-sign-btn"
 							type="button" 
 							value="サインイン/サインアップ" 
-							onClick={this.sign_action}
+							onClick={this.auth_action}
 						/>
 					</div>
 				</div>

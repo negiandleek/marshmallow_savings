@@ -68,10 +68,6 @@ export default store => next => action => {
 
 	return call_api_func(method,endpoint,payload)
 		.then(function(res){
-			console.log(action_with({
-				res,
-				types: success_type
-			}))
 			next(action_with({
 				res: res.data,
 				type: success_type

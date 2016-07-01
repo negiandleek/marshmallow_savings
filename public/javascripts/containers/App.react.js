@@ -33,7 +33,7 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		auth_action: bindActionCreators(index.twitter_api, dispatch)
+		auth_action: bindActionCreators(index.oauth_twitter, dispatch)
 	}
 }
 

@@ -5,7 +5,6 @@ const initial_state = {
 };
 
 function auth_reducer(state = initial_state, action){
-	console.log(action.type)
 	switch (action.type){
 		case types.TWITTER_SIGN_REQUEST:
 			return Object.assign({},state,{

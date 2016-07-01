@@ -3,7 +3,7 @@
 import tweepy;
 import app.secret as private;
 
-CALLBACK_URL = "http://192.168.11.3:4321/callback";
+CALLBACK_URL = "http://192.168.11.2:4321/callback";
 
 def twitter_api(access_token = None, access_token_secret = None, with_callback_url = False):
     if with_callback_url:
@@ -23,11 +23,10 @@ def twitter_api(access_token = None, access_token_secret = None, with_callback_u
 
 
 def generate_oauth_url():
-	oauth = tweepy.OAuthHandler(private.SECRET_CONSUMER_KEY,private.SECRET_CONSUMER_SECRET, CALLBACK_URL);
-	redirect_url = oauth.get_authorization_url(signin_with_twitter = True);
-	request_token = oauth.request_token;
-	
-	return redirect_url, request_token["oauth_token"], request_token["oauth_token_secret"]
+    oauth = tweepy.OAuthHandler(private.SECRET_CONSUMER_KEY,private.SECRET_CONSUMER_SECRET, CALLBACK_URL);
+    redirect_url = oauth.get_authorization_url(signin_with_twitter = True);
+    request_token = oauth.request_token;
+    return redirect_url, request_token["oauth_token"], request_token["oauth_token_secret"]
 
 def get_access_token(request_token_key, request_token_secret, oauth_verifier):
 	oauth_handler = tweepy.OAuthHandler(private.SECRET_CONSUMER_KEY,private.SECRET_CONSUMER_SECRET)

@@ -13,9 +13,8 @@ let store = createStore(
 	rootReducer,
 	applyMiddleware(
 		thunk,
-		webApiUtilities
-		// crashReporter,
-		// logger
+		webApiUtilities,
+		logger
 	)
 )
 
