@@ -1,13 +1,13 @@
 import {CALL_API} from "../middleware/webApiUtilities";
 
-export const TWITTER_SIGN_REQUEST = "TWITTER_SIGN_REQUEST";
-export const TWITTER_SIGN_SUCCESS = "TWITTER_SIGN_SUCCESS";
-export const TWITTER_SIGN_FAILURE = "TWITTER_SIGN_FAILURE";
+export const TWITTER_OAUTH_REQUEST = "TWITTER_OAUTH_REQUEST";
+export const TWITTER_OAUTH_SUCCESS = "TWITTER_OAUTH_SUCCESS";
+export const TWITTER_OAUTH_FAILURE = "TWITTER_OAUTH_FAILURE";
 
 function fetch_twitter (endpoint,method) {
 	return {
 		[CALL_API]: {
-			types: [TWITTER_SIGN_REQUEST, TWITTER_SIGN_SUCCESS, TWITTER_SIGN_FAILURE],
+			types: [TWITTER_OAUTH_REQUEST, TWITTER_OAUTH_SUCCESS, TWITTER_OAUTH_FAILURE],
 			endpoint: endpoint,
 			method: method,
 		}
@@ -15,7 +15,7 @@ function fetch_twitter (endpoint,method) {
 }
 
 export function oauth_twitter () {
-	return function fetchosts(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch(fetch_twitter("sign","get"))
 	}
 }

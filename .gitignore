@@ -7,3 +7,4 @@ static/
 .txt
 *__pycache__/
 secret.py
+env/

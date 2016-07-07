@@ -1,10 +1,11 @@
-from bottle import app, run, route, static_file, redirect, request, HTTPResponse;
+from bottle import app, run, route, static_file, redirect, request, response, HTTPResponse;
 from beaker.middleware import SessionMiddleware;
 from app.modules import twitter;
-import time;
+
+#session store
 session_opts = {
 	"session.type": "file",
-	"session.data_dir": "./data",
+	"session.data_dir": "./app/env/data",
 	"session.cookie_expires": True,
     "session.auto": True
 };
@@ -21,12 +22,15 @@ def static_file_path(filename):
 
 @route("/sign")
 def twitter_api():
-	auth_url, request_token_key, request_token_secret = twitter.generate_oauth_url();
-	data = {"token_key": request_token_key, "token_secret": request_token_secret};
+	auth_url, request_oauth_token, request_oauth_token_secret = twitter.generate_oauth_url();
+	data = {"request_oauth_token": request_oauth_token, "request_oauth_token_secret": request_oauth_token_secret};
+	
 	session = request.environ.get("beaker.session");
 	session["twitter"] = data;
+
+	r = HTTPResponse(status = 200, body = {"url": auth_url});
 	
-	#redirect(auth_url);
+	return r;
 
 @route('/callback')
 def twitter_callback():
@@ -34,35 +38,15 @@ def twitter_callback():
 
     oauth_verifier = request.query['oauth_verifier']
 
-    access_token_key, access_token_secret = twitter.get_access_token(
-        session["twitter"]["token_key"],
-    	session["twitter"]["token_secret"],
+    access_token, access_token_secret = twitter.get_access_token(
+        session["twitter"]["request_oauth_token"],
+    	session["twitter"]["request_oauth_token_secret"],
         oauth_verifier)
 
-    twitter_user = twitter.verify_credentials(access_token_key, access_token_secret)
-    print(twitter_user);
-
-    return static_file("callback.html", root="./static");
-
-# @route("/hoge")
-# def sample () :
-# 	sex = request.query.payload;
-# 	print(sex);
-# 	print(sex);
-# 	if sex == "woman":
-# 		r = HTTPResponse(status=200, body={"sex":"sex is woman"});
-# 		r.set_header("Content-Type", "application/json");
-
-# 		return r
-# 	elif sex == "man":
-# 		r = HTTPResponse(status=200, body={"sex":"sex is man"})
-# 		r.set_header("Content-Type", "application/json");
-# 		time.sleep(1.0);
-# 		return r;
-# 	else :
-# 		r = HTTPResponse(status=200, body={"sex":"sex is minority"})
-# 		r.set_header("Content-Type", "application/json");
-
-# 		return r;
+    twitter_user = twitter.verify_credentials(access_token, access_token_secret)
+    
+    print(twitter_user.id,twitter_user.screen_name);
+    
+    return static_file("index.html", root="./static");
 
 run(app=app,host="localhost",port="1234",debug=True, reloader=True); 
