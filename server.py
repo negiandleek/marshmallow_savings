@@ -2,6 +2,19 @@ from bottle import app, run, route, static_file, redirect, request, response, HT
 from beaker.middleware import SessionMiddleware;
 from app.modules import twitter;
 
+import pymysql.cursors; 
+from app.env.secret import DATABASE_PASSWORD;
+
+#database
+connection = pymysql.connect(
+	host= "localhost",
+	user= "root",
+	password= DATABASE_PASSWORD,
+	db="marshmallow",
+	charset="utf8",
+	cursorclass= pymysql.cursors.DictCursor
+);
+
 #session store
 session_opts = {
 	"session.type": "file",
@@ -44,9 +57,14 @@ def twitter_callback():
         oauth_verifier)
 
     twitter_user = twitter.verify_credentials(access_token, access_token_secret)
-    
-    print(twitter_user.id,twitter_user.screen_name);
-    
+
+    int(twitter_user.id);
+
+    with connection.cursor() as cursor:
+    	sql = "INSERT INTO `users` (`user_id`,`user_name`) SELECT %s, %s FROM dual WHERE NOT EXISTS(SELECT * FROM `users` WHERE `user_id` = %s)"
+
+    	cursor.execute(sql,(int(twitter_user.id),twitter_user.screen_name,int(twitter_user.id)))
+		
     return static_file("index.html", root="./static");
 
 run(app=app,host="localhost",port="1234",debug=True, reloader=True); 
