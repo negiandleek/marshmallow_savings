@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_ROOT = "http://192.168.11.11:4321/";
+const API_ROOT = "http://192.168.11.3:4321/";
 
 function call_api_func (_method, endpoint, _payload) {
 	return new Promise ((resolve, reject) => {

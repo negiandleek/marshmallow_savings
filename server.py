@@ -57,14 +57,34 @@ def twitter_callback():
         oauth_verifier)
 
     twitter_user = twitter.verify_credentials(access_token, access_token_secret)
-
     int(twitter_user.id);
 
     with connection.cursor() as cursor:
-    	sql = "INSERT INTO `users` (`user_id`,`user_name`) SELECT %s, %s FROM dual WHERE NOT EXISTS(SELECT * FROM `users` WHERE `user_id` = %s)"
+    	sql = """SELECT id FROM users
+    				WHERE user_id = %s"""
 
-    	cursor.execute(sql,(int(twitter_user.id),twitter_user.screen_name,int(twitter_user.id)))
+    	cursor.execute(sql,(twitter_user.id));
+    	results = cursor.fetchone();
+    	print(type(results));
+    	print(results);
+    	if results is None:
+    		pass
+    	else:
+    		print("result"+ "...........bad");
+
+    with connection.cursor() as cursor:
+    	sql = """INSERT INTO users (user_id, user_name) 
+    				SELECT %s,%s
+    				FROM dual 
+    				WHERE NOT EXISTS (
+    					SELECT * 
+    					FROM users 
+    					WHERE user_id = %s
+    				)"""
+
+    	cursor.execute(sql,(twitter_user.id,twitter_user.screen_name,twitter_user.id));
+    	connection.commit();
 		
     return static_file("index.html", root="./static");
 
-run(app=app,host="localhost",port="1234",debug=True, reloader=True); 
+run(app=app,host="localhost",port="1234",debug=True, reloader=True);
