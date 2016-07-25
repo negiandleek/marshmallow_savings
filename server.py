@@ -5,6 +5,12 @@ from app.modules import twitter;
 import pymysql.cursors; 
 from app.env.secret import DATABASE_PASSWORD;
 
+import jwt;
+from Crypto.PublicKey import RSA;
+
+from cryptography.hazmat.primitives import serialization;
+from cryptography.hazmat.backends import default_backend;
+
 #database
 connection = pymysql.connect(
 	host= "localhost",
@@ -27,11 +33,26 @@ app = SessionMiddleware(app(), session_opts);
 
 @route("/")
 def index():
+	#key_file = open()
+	with open("./app/env/id_rsa") as key_file:
+		print(key_file.read());
+		private_key = serialization.load_pem_private_key(
+				key_file.read(),
+				password="",
+				backend=default_backend()
+			)
+
+	# encoded = jwt.encode({"some": "payload"},private_key,algorithm='HS256');
+
 	return static_file("index.html",root="./static");
 
 @route("/static/<filename:path>")
 def static_file_path(filename):
 	return static_file(filename, root="./static");
+
+@route("/auth_state")
+def check_auth_state():
+	request_jwt = request.forms.get("jwt");
 
 @route("/sign")
 def twitter_api():
@@ -60,31 +81,39 @@ def twitter_callback():
     int(twitter_user.id);
 
     with connection.cursor() as cursor:
-    	sql = """SELECT id FROM users
+    	sql = """SELECT user_id FROM users
     				WHERE user_id = %s"""
 
     	cursor.execute(sql,(twitter_user.id));
     	results = cursor.fetchone();
-    	print(type(results));
-    	print(results);
+       	
     	if results is None:
-    		pass
+    		with connection.cursor() as cursor:
+		    	sql = """INSERT INTO users (user_id, user_name) 
+		    				SELECT %s,%s
+		    				FROM dual 
+		    				WHERE NOT EXISTS (
+		    					SELECT * 
+		    					FROM users 
+		    					WHERE user_id = %s
+		    				)"""
+
+		    	cursor.execute(sql,(twitter_user.id,twitter_user.screen_name,twitter_user.id))
+		    	connection.commit(twitter_user.id);
+		    	
+		    	jwt = generate_jwt();
     	else:
-    		print("result"+ "...........bad");
+    		user_id = results["user_id"];
+    		jwt = generate_jwt(user_id);
 
-    with connection.cursor() as cursor:
-    	sql = """INSERT INTO users (user_id, user_name) 
-    				SELECT %s,%s
-    				FROM dual 
-    				WHERE NOT EXISTS (
-    					SELECT * 
-    					FROM users 
-    					WHERE user_id = %s
-    				)"""
+    r = HTTPResponse(status=200, body={jwt: jwt},content_type="application/json; charset=utf8");
 
-    	cursor.execute(sql,(twitter_user.id,twitter_user.screen_name,twitter_user.id));
-    	connection.commit();
-		
-    return static_file("index.html", root="./static");
+def generate_jwt(user_id):
+	_rsa_public_key = open('./app/env/id_rsa', 'r').read();
+	rsa_public_key = RSA.importKey(_rsa_public_key);
+	key = rsa_public_key;
+
+	encoded = jwt.encode({"some": "payload"},key,algorithm='HS256');
+
 
 run(app=app,host="localhost",port="1234",debug=True, reloader=True);
