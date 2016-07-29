@@ -6,10 +6,16 @@ import pymysql.cursors;
 from app.env.secret import DATABASE_PASSWORD;
 
 import jwt;
-from Crypto.PublicKey import RSA;
+from Crypto.PublicKey import RSA
+from Crypto import Random
 
-from cryptography.hazmat.primitives import serialization;
-from cryptography.hazmat.backends import default_backend;
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.x509 import load_pem_x509_certificate
+
+import pprint
+
 
 #database
 connection = pymysql.connect(
@@ -33,17 +39,47 @@ app = SessionMiddleware(app(), session_opts);
 
 @route("/")
 def index():
-	#key_file = open()
-	with open("./app/env/id_rsa") as key_file:
-		print(key_file.read());
-		private_key = serialization.load_pem_private_key(
-				key_file.read(),
-				password="",
-				backend=default_backend()
-			)
+	private_key = rsa.generate_private_key(
+			public_exponent=65537,
+		    key_size=2048,
+		    backend=default_backend()
+		);
 
-	# encoded = jwt.encode({"some": "payload"},private_key,algorithm='HS256');
+	private_pem = private_key.private_bytes(
+		    encoding=serialization.Encoding.PEM,
+		   	format=serialization.PrivateFormat.TraditionalOpenSSL,
+		  	encryption_algorithm=serialization.NoEncryption()
+		);
 
+	public_key = private_key.public_key();
+	public_pem = public_key.public_bytes(
+			encoding=serialization.Encoding.PEM,
+			format=serialization.PublicFormat.SubjectPublicKeyInfo
+		);
+
+	print(public_pem);
+	key = load_pem_x509_certificate(private_key, default_backend())
+	print(key.public_key())
+	# random_func = Random.new().read;
+	# rsa = RSA.generate(1024,random_func);
+	# private_pem = rsa.exportKey(format="PEM",passphrase=None);
+
+	# with open("./app/env/private.pem","wb") as f:
+	# 	f.write(private_pem);
+
+	# public_pem = rsa.publickey().exportKey();
+	# with open("./app/env/public.pem","wb") as f:
+	# 	f.write(public_pem);
+
+	# private_key_str = open("./app/env/private.pem","rb").read();
+	# private_key = RSA.importKey(private_key_str).exportKey();
+	encoded = jwt.encode({'some': 'payload'}, private_pem, algorithm='HS256');
+
+	# public_key_str = open("./app/env/public.pem","rb").read();
+	# public_key = RSA.importKey(public_key_str).exportKey();
+
+	decoded = jwt.decode(encoded, key = private_pem, verify=True);
+	print(decoded)
 	return static_file("index.html",root="./static");
 
 @route("/static/<filename:path>")
