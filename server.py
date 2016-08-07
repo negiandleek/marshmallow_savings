@@ -1,33 +1,10 @@
 from bottle import app, run, route, static_file, redirect, request, response, HTTPResponse;
 from beaker.middleware import SessionMiddleware;
 from app.modules import twitter;
+from config.db import connection;
+from config.session import session_opts;
 
-import pymysql.cursors; 
-from app.env.secret import DATABASE_PASSWORD;
-
-import datetime;
-import time;
-import jwt;
-import hmac;
-
-
-#database
-connection = pymysql.connect(
-	host= "localhost",
-	user= "root",
-	password= DATABASE_PASSWORD,
-	db="marshmallow",
-	charset="utf8",
-	cursorclass= pymysql.cursors.DictCursor
-);
-
-#session store
-session_opts = {
-	"session.type": "file",
-	"session.data_dir": "./app/env/data",
-	"session.cookie_expires": True,
-    "session.auto": True
-};
+import json;
 
 app = SessionMiddleware(app(), session_opts);
 
@@ -54,6 +31,8 @@ def twitter_api():
 	r = HTTPResponse(status = 200, body = {"url": auth_url});
 	
 	return r;
+
+from app.modules.jwt import generate_jwt, is_valid_jwt;
 
 @route('/callback')
 def twitter_callback():
@@ -97,19 +76,37 @@ def twitter_callback():
 
 
     redirect("/?jwt="+ jwt);
-    
 
-def generate_jwt(user_id):
-	with open("./app/env/private.pem","rb") as f:
-		private_pem = f.read();
+@route("/check_jwt", method='POST')
+def check_jwt () :
+	jwt = request.json["payload"];
 
-	exp = datetime.datetime.utcnow() + datetime.timedelta(days = 7);
-	secret = hmac.new(private_pem,None,"sha256").digest();
+	state, reflesh_jwt, user_id = is_valid_jwt(jwt);
 
-	encoded = jwt.encode({"exp": exp,"user_id": user_id}, secret, algorithm="HS256").decode('utf-8');
-	return encoded;
+	if state:
+		dict_data = {
+			"status_code": 200,
+			"status_message": "SUCCESS",
+			"data": {
+				"jwt": reflesh_jwt,
+				"items": [{
+					"user":{
+						"user_id": user_id,
+						"user_name": "",
+					}
+				}]
+			}
+		}
+		json_data = json.dumps(dict_data);
+		r = HTTPResponse(status=200,body=json_data);
+	else :
+		dict_data = {
+			"status_code": 401,
+			"status_message": "UNAUTHORIZED",
+		}
+		json_data = json.dumps(dict_data);
+		r = HTTPResponse(status=401,body=json_data);
 
-
-# decoded = jwt.decode(encoded, secret, verify=True);
-
+	return r;
+	
 run(app=app,host="localhost",port="1234",debug=True, reloader=True);
