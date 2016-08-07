@@ -17,7 +17,7 @@ function call_api_func (_method, endpoint, _payload) {
 			axios
 				.get(full_url, { 
 					params:{
-						payload
+						payload: payload
 					}
 				})
 				.then( (res) => {
@@ -28,7 +28,7 @@ function call_api_func (_method, endpoint, _payload) {
 				})
 		}else if (method === "post"){
 			axios
-				.post(full_url, { payload })
+				.post(full_url, {payload})
 				.then( (res) => {
 
 				})
