@@ -19,6 +19,7 @@ class App extends Component {
 				<Landing 
 					is_auth = {this.props.is_auth}
 					auth_action = {this.props.auth_action}
+					check_jwt = {this.props.check_jwt}
 				/>
 			</div>
 		);
@@ -33,7 +34,8 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		auth_action: bindActionCreators(index.oauth_twitter, dispatch)
+		auth_action: bindActionCreators(index.oauth_twitter, dispatch),
+		check_jwt: bindActionCreators(index.check_jwt, dispatch)
 	}
 }
 

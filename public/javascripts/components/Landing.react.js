@@ -4,6 +4,27 @@ class Landing extends React.Component{
 	constructor(props){
 		super(props);
 		this.auth_action = this.auth_action.bind(this);
+		this.auto_auth();
+	}
+	auto_auth () {
+		let url = window.location.search;
+		let reg = /(\?jwt=){1}/;
+
+		if(reg.test(url)){
+			let _url = url.slice(1);
+			let split_url = _url.split("=");
+			let jwt = split_url[1];
+			
+			localStorage.setItem("marshmallow_jwt", jwt);
+			this.props.check_jwt(jwt);
+		}else{
+			try{
+				let local_data = localStorage.getItem("marshmallow_jwt");
+				this.props.check_jwt(local_data);
+			}catch (err) {
+
+			}
+		}
 	}
 	auth_action(){
 		this.props.auth_action();
