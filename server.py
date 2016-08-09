@@ -33,6 +33,7 @@ def twitter_api():
 	return r;
 
 from app.modules.jwt import generate_jwt, is_valid_jwt;
+import app.api.user as user_modules;
 
 @route('/callback')
 def twitter_callback():
@@ -67,7 +68,8 @@ def twitter_callback():
 		    				)"""
 
 		    	cursor.execute(sql,(twitter_user.id,twitter_user.screen_name,twitter_user.id))
-		    	connection.commit(twitter_user.id);
+		    	# connection.commit(twitter_user.id);
+		    	connection.commit();
 		    	
 		    	jwt = generate_jwt(twitter_user.id);
     	else:
@@ -80,8 +82,8 @@ def twitter_callback():
 @route("/check_jwt", method='POST')
 def check_jwt () :
 	jwt = request.json["payload"];
-
 	state, reflesh_jwt, user_id = is_valid_jwt(jwt);
+	user_info = user_modules.get_user_info(user_id);
 
 	if state:
 		dict_data = {
@@ -89,12 +91,11 @@ def check_jwt () :
 			"status_message": "SUCCESS",
 			"data": {
 				"jwt": reflesh_jwt,
-				"items": [{
-					"user":{
-						"user_id": user_id,
-						"user_name": "",
-					}
-				}]
+				"user":{
+					"user_id": user_id,
+					"user_name": user_info["user_name"],
+				},
+				"items":[]
 			}
 		}
 		json_data = json.dumps(dict_data);
