@@ -109,5 +109,25 @@ def check_jwt () :
 		r = HTTPResponse(status=401,body=json_data);
 
 	return r;
+
+@route("/goal",method="get")
+@route("/goal",method="post")
+@route("/goal",method="put")
+@route("/goal",method="delete")
+def curd_goal () :
+	method = request.method
+
+	if method == "GET":
+		pass;
+	elif method == "POST":
+		payload = request.json["payload"];
+		pass;
+	elif method == "PUT":
+		payload = request.json["payload"];
+		print(payload);
+		pass;
+	elif method == "DELETE":
+		payload = request.json["payload"];
+		pass;
 	
 run(app=app,host="localhost",port="1234",debug=True, reloader=True);
