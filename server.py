@@ -82,7 +82,7 @@ def twitter_callback():
 @route("/check_jwt", method='POST')
 def check_jwt () :
 	jwt = request.json["payload"];
-	state, reflesh_jwt, user_id = is_valid_jwt(jwt);
+	state, user_id = is_valid_jwt(jwt);
 	user_info = user_modules.get_user_info(user_id);
 
 	if state:
@@ -90,7 +90,7 @@ def check_jwt () :
 			"status_code": 200,
 			"status_message": "SUCCESS",
 			"data": {
-				"jwt": reflesh_jwt,
+				"jwt": jwt,
 				"user":{
 					"user_id": user_id,
 					"user_name": user_info["user_name"],

@@ -21,10 +21,8 @@ def is_valid_jwt (str_jwt):
 		decoded = jwt.decode(encoded_jwt, secret, verify=True);
 		user_id = decoded["user_id"];
 
-		# get user info
-		reflesh_jwt = generate_jwt(user_id);
 	except Exception as e:
-		print(e.args)
+		print("UnAuthorized"+e.args)
 		state = False;
 	
-	return state, reflesh_jwt, user_id;
+	return state, user_id;
