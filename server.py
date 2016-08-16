@@ -5,8 +5,13 @@ from config.db import connection;
 from config.session import session_opts;
 
 import json;
+import config.router as root;
+from app.modules import Auth;
 
 app = SessionMiddleware(app(), session_opts);
+
+auth = Auth();
+
 
 @route("/")
 def index():
@@ -77,7 +82,7 @@ def twitter_callback():
     		jwt = generate_jwt(user_id);
 
 
-    redirect("/?jwt="+ jwt);
+    redirect(root.SERVER_URL +"?jwt="+ jwt);
 
 @route("/check_jwt", method='POST')
 def check_jwt () :
@@ -114,20 +119,21 @@ def check_jwt () :
 @route("/goal",method="post")
 @route("/goal",method="put")
 @route("/goal",method="delete")
+# @auth.req_auth()
 def curd_goal () :
 	method = request.method
 
 	if method == "GET":
 		pass;
+	
 	elif method == "POST":
 		payload = request.json["payload"];
-		pass;
+
 	elif method == "PUT":
 		payload = request.json["payload"];
 		print(payload);
-		pass;
+	
 	elif method == "DELETE":
 		payload = request.json["payload"];
-		pass;
 	
-run(app=app,host="localhost",port="1234",debug=True, reloader=True);
+run(app=app,host="192.168.11.3",port="1234",debug=True, reloader=True);

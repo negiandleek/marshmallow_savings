@@ -175,7 +175,7 @@ gulp.task('clean:distdir', (cb) => {
 gulp.task('watch', (cb) => {
     browserSync.init(null,{
         files: [".src/**/*.*"],
-        proxy: 'http://localhost:1234',
+        proxy: 'http://192.168.11.3:1234',
         port: 4321,
         notify: true,
         open:'external'
