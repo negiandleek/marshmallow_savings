@@ -3,15 +3,11 @@ from beaker.middleware import SessionMiddleware;
 from app.modules import twitter;
 from config.db import connection;
 from config.session import session_opts;
-
 import json;
 import config.router as root;
-from app.modules import Auth;
+from app.modules.auth import req_auth, sign_out;
 
 app = SessionMiddleware(app(), session_opts);
-
-auth = Auth();
-
 
 @route("/")
 def index():
@@ -119,21 +115,22 @@ def check_jwt () :
 @route("/goal",method="post")
 @route("/goal",method="put")
 @route("/goal",method="delete")
-# @auth.req_auth()
-def curd_goal () :
+@req_auth
+def curd_goal (user_id) :
 	method = request.method
+	payload = request.json["payload"];
 
 	if method == "GET":
 		pass;
-	
 	elif method == "POST":
-		payload = request.json["payload"];
+		pass;
 
 	elif method == "PUT":
-		payload = request.json["payload"];
-		print(payload);
+		pass;
 	
 	elif method == "DELETE":
-		payload = request.json["payload"];
+		pass;
+
+route("/sign_out", method="post")(sign_out);
 	
 run(app=app,host="192.168.11.3",port="1234",debug=True, reloader=True);

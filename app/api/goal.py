@@ -7,6 +7,8 @@ def get_active_goal (user_id):
 
 		result = cursor.execute(sql,(user_id));
 
+		return result;
+
 def get_achive_goal (user_id):
 	with connection.cursor() as cursor:
 		sql = """SELECT id, value, marshmallows_num FROM users 
