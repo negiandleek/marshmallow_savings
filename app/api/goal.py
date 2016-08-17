@@ -48,18 +48,18 @@ def achieve_goal (user_id, goal_id):
 
 def increment_marshmallows_num (user_id, goal_id):
 	with connection.cursor() as cursor:
-		sql = """SELECT marshmallows_num FROM users 
-					WHERE user_id = %s and active = 1"""
+		sql = """UPDATE goals SET marshmallows_num = (
+						SELECT marshmallows_num + 1 
+						FROM (SELECT * FROM goals) AS c1 
+						WHERE c1.user_id = %s 
+						AND c1.id = %s
+						AND c1.active = 1 
+					) 
+					WHERE user_id = %s 
+					AND id = %s
+					AND active = 1;"""
 
-		cursor.execute(sql,(num, user_id, goal_id));
-
-	num = cursor.execute(sql,(user_id, goal_id));
-	num += 1;
-
-	with connection.cursor() as cursor:
-		sql = """UPDATE goals SET marshmallows_num = %s
-					WHERE user_id = %s, goal_id = %s""";
-
-		cursor.execute(sql,(num, user_id, goal_id));
+		cursor.execute(sql,(user_id, goal_id, user_id, goal_id));
+		connection.commit()
 
 # update activity day;

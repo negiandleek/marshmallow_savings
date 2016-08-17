@@ -19,14 +19,20 @@ def req_auth (func):
 			result_goal_data = goal.get_active_goal(user_id);
 			goals_id = result_goal_data["id"];
 
-			utc_now = datetime.datetime.utcnow();
-			jst_now = datetime.timedelta(hours = 9);
+			# utc_now = datetime.datetime.utcnow();
+			# jst_now = datetime.timedelta(hours = 9);
 
 			# last_update確認して日にちをまたいでいたらtodoのachiveをFalseにする
-			# with connection.cursor() as cursor:
-			# 	sql = """ > SELECT last_update FROM users
-			# 				WHERE user_id = %s;"""
-
+			with connection.cursor() as cursor:
+				sql = """UPDATE todos SET achieve = 0
+							WHERE goals_id = %s 
+							AND 1 <= DATEDIFF(
+								NOW(),
+								(SELECT last_update FROM users
+									WHERE user_id = %s)
+							)"""
+				cursor.execute(sql,(goals_id, user_id));
+				connection.commit();
 				
 
 			with connection.cursor() as cursor:
