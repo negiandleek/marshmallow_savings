@@ -9,6 +9,8 @@ from app.modules.auth import req_auth, sign_out;
 
 app = SessionMiddleware(app(), session_opts);
 
+#データベース、変数を複数にするかどうか命名規則を整える
+
 @route("/")
 def index():
 	return static_file("index.html",root="./static");
