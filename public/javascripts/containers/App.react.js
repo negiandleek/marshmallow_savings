@@ -26,9 +26,11 @@ class App extends Component {
 	}
 }
 
+// stateは本来一つのはずなのでそこら辺について調べる
 function mapStateToProps(state){
+	console.log(state);
 	return {
-		is_auth: state.authReducer.is_auth
+		is_auth: state
 	}
 }
 

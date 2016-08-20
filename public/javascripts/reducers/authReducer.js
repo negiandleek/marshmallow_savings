@@ -4,19 +4,41 @@ const initial_state = {
 	is_auth: false
 };
 
-function auth_reducer(state = initial_state, action){
+// authまたはoatuhをしっかり使い分けて！ 
+export function twitter_auth_reducer(state = initial_state, action){
 	switch (action.type){
 		case types.TWITTER_OAUTH_REQUEST:
 			return Object.assign({},state,{
-				is_auth: "fetching"
+				is_auth: "fetching_twitter"
 			});
 
 		case types.TWITTER_OAUTH_SUCCESS:
-			location.href = action.res.url;
+			// location.href = action.res.url;
+			return Object.assign({}, state, {
+				is_auth: "success_twitter"
+			});
+
+		case types.TWITTER_OAUTH_FAILURE:
+			return;
 
 		default:
 			return state;
 	}
 }
 
-module.exports = auth_reducer;
+export function auth_reducer (state = initial_state, action){
+	switch (action.type){
+		case types.SIGIN_IN_REQUEST:
+			return Object.assign({}, state, {
+				is_auth: "fetching_auth"
+			});
+
+		case types.SIGIN_IN_SUCCESS:
+			return Object.assign({}, state, {
+				is_auth: "true"
+			});
+
+		default:
+			return state;
+	}
+}

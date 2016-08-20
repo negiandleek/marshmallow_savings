@@ -22,7 +22,7 @@ class Landing extends React.Component{
 				let local_data = localStorage.getItem("marshmallow_jwt");
 				this.props.check_jwt(local_data);
 			}catch (err) {
-
+				console.error(err)
 			}
 		}
 	}

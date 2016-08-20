@@ -1,8 +1,9 @@
 import {combineReducers} from "redux";
-import authReducer from "./authReducer";
+import {twitter_auth_reducer, auth_reducer} from "./authReducer";
 
 const rootReducer = combineReducers({
-	authReducer
+	twitter_auth_reducer,
+	auth_reducer
 })
 
 export default rootReducer;
