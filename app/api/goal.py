@@ -2,16 +2,17 @@ from config.db import connection;
 
 def get_active_goal (user_id):
 	with connection.cursor() as cursor:
-		sql = """SELECT id, value, marshmallows_num FROM users 
+		sql = """SELECT id, value, marshmallows_num FROM goals 
 					WHERE user_id = %s and active = 1"""
 
-		result = cursor.execute(sql,(user_id));
+		__result = cursor.execute(sql,(user_id));
+		result = cursor.fetchone();
 
 		return result;
 
 def get_achive_goal (user_id):
 	with connection.cursor() as cursor:
-		sql = """SELECT id, value, marshmallows_num FROM users 
+		sql = """SELECT id, value, marshmallows_num FROM goals 
 					WHERE user_id = %s and active = 0 and achieve = 1"""
 
 		result = cursor.execute(sql,(user_id));

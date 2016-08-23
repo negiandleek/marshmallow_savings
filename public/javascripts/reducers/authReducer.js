@@ -5,7 +5,7 @@ const initial_state = {
 };
 
 // authまたはoatuhをしっかり使い分けて！ 
-export function twitter_auth_reducer(state = initial_state, action){
+function auth_reducer(state = initial_state, action){
 	switch (action.type){
 		case types.TWITTER_OAUTH_REQUEST:
 			return Object.assign({},state,{
@@ -21,13 +21,6 @@ export function twitter_auth_reducer(state = initial_state, action){
 		case types.TWITTER_OAUTH_FAILURE:
 			return;
 
-		default:
-			return state;
-	}
-}
-
-export function auth_reducer (state = initial_state, action){
-	switch (action.type){
 		case types.SIGIN_IN_REQUEST:
 			return Object.assign({}, state, {
 				is_auth: "fetching_auth"
@@ -42,3 +35,5 @@ export function auth_reducer (state = initial_state, action){
 			return state;
 	}
 }
+
+module.exports = auth_reducer;

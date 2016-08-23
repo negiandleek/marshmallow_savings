@@ -113,18 +113,45 @@ def check_jwt () :
 
 	return r;
 
-@route("/goal",method="get")
+from app.api.goal import get_active_goal;
+from app.api.todo import read_todo;
+
+@route("/get_doing", method="post")
+@req_auth 
+def read_doing(user_id):
+	goal_results = get_active_goal(user_id);
+	todo_results = read_todo(goal_results["id"]);
+
+	json_data = {"goal": goal_results,"todos": todo_results};
+	response_message = {"api":{"status": "200", "message": "SUCCESS"}};
+
+	json_data.update(response_message);
+
+	encoded_json = json.dumps(json_data);
+
+	r = HTTPResponse(state=200, body=encoded_json, content_type="application/json");
+	return r;
+
+
+# payloadの内容で分けようかな。
+@route("/get_goal",method="post")
+@req_auth
+def read_goal (user_id) :
+	results = get_active_goal(user_id);
+	print(results);
+
+	r = HTTPResponse(state=200,body="");
+	return r;
+
 @route("/goal",method="post")
 @route("/goal",method="put")
 @route("/goal",method="delete")
 @req_auth
-def curd_goal (user_id) :
+def cud_goal (user_id) :
 	method = request.method
 	payload = request.json["payload"];
 
-	if method == "GET":
-		pass;
-	elif method == "POST":
+	if method == "POST":
 		pass;
 
 	elif method == "PUT":

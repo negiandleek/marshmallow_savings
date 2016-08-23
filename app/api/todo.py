@@ -16,9 +16,10 @@ def create_todo (goal_id, value):
 def read_todo (goal_id):
 	with connection.cursor() as cursor:
 		sql = """SELECT id, value, achieve FROM todos
-					WHERE id = %s;"""
+					WHERE goals_id = %s;"""
 
-		result = cursor.execute(sql, (goal_id));
+		__result = cursor.execute(sql, (goal_id));
+		result = cursor.fetchall();
 
 	return result;
 
@@ -43,3 +44,4 @@ def delete_todo (todo_id):
 	return;
 
 def toggle_todo (todo_id):
+	pass;
