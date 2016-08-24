@@ -3,10 +3,35 @@ import React from "react";
 class HomePage extends React.Component{
 	constructor(props){
 		super(props);
-		//TODO:jwtを一箇所で管理する
-		// local session storageを使うのもあり
 		let local_jwt = localStorage.getItem("marshmallow_jwt");
 		this.props.get_doing(local_jwt);
+
+		this.state = {
+			goal: this.props.doing_data.goal || "",
+			todos: this.props.doing_data.todos || "",
+			new_todo: ""
+		};
+
+		this.change_goal = this.change_goal.bind(this);
+		this.change_new_todo = this.change_new_todo.bind(this);
+	}
+	componentWillReceiveProps (nextProps) {
+		this.setState({
+			goal: nextProps.doing_data.goal,
+			todos: nextProps.doing_data.todos
+		});
+	}
+	change_goal (e) {
+		let changed_goal_value = e.target.value;
+		this.setState({
+			goal: {"value": changed_goal_value}
+		});
+	} 
+	change_new_todo (e) {
+		let inputed_new_value = e.target.value;
+		this.setState({
+			new_todo: inputed_new_value
+		});
 	}
 	render(){
 		return(
@@ -21,7 +46,14 @@ class HomePage extends React.Component{
 							className="form-input-text"
 							type="text" 
 							value={(() => {
-								return this.props.doing_data.goal.value || "新規追加"
+								return this.state.goal.value || ""
+							})()}
+							placeholder = {(() => {
+								if (!this.state.goal.value){
+									return "新規目標"
+								}else{
+									return;
+								}
 							})()}
 							onChange={this.change_goal}
 						/>
@@ -42,21 +74,44 @@ class HomePage extends React.Component{
 						</header>
 						<ul className="top-page-entory__todos__wrapper">
 							<input 
+								className="form-input-text"
+								type="text"
+								value={this.state.new_todo}
+								placeholder ="新規タスク"
+								onChange={this.change_new_todo}
+							/>
+							<input 
 								className="form-input-btn"
 								type="button"
 								value="追加"
 							/>
 							{(()=>{
-								if(this.props.doing_data.todos){
-									return this.props.doing_data.todos.map((items, index)=>{
+								if(this.state.todos){
+									return this.state.todos.map((items, index)=>{
 										return(
-											<li className="top-page-entory__todos__wrapper__item">{items.value}</li>
+											<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
+												<input 
+													className="form-input-text"
+													type="text"
+													value={items.value}
+												/>
+												<input 
+													className="form-input-btn"
+													type="button"
+													value="変更"
+												/>
+												<input
+													className="form-input-btn"
+													type="button"
+													value="削除"
+												/>
+											</li>
 										)
 									});
 								}else{
-									return "まだ"
+									return "登録されていません"
 								}
-							})()};
+							})()}
 						</ul>
 					</div>
 				</div>
