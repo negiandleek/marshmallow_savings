@@ -10,6 +10,7 @@ import HomePage from "../components/HomePage.react";
 //action list
 import * as index from "../actions/index";
 import * as doing from "../actions/doing";
+import * as todo from "../actions/todo";
 class App extends Component {
 	constructor (props) {
 		super(props);
@@ -23,6 +24,7 @@ class App extends Component {
 							return <HomePage 
 									get_doing = {this.props.get_doing}
 									doing_data = {this.props.doing_data}
+									add_todo = {this.props.add_todo}
 								/>
 						}else{
 							return <LandingPage 
@@ -50,7 +52,8 @@ function mapDispatchToProps(dispatch){
 	return {
 		auth_action: bindActionCreators(index.oauth_twitter, dispatch),
 		check_jwt: bindActionCreators(index.check_jwt, dispatch),
-		get_doing: bindActionCreators(doing.get_doing, dispatch)
+		get_doing: bindActionCreators(doing.get_doing, dispatch),
+		add_todo: bindActionCreators(todo.add_todo, dispatch)
 	}
 }
 

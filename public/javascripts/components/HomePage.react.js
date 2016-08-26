@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from 'react-dom';
 
 class HomePage extends React.Component{
 	constructor(props){
@@ -14,6 +15,7 @@ class HomePage extends React.Component{
 
 		this.change_goal = this.change_goal.bind(this);
 		this.change_new_todo = this.change_new_todo.bind(this);
+		this.click_to_add_todo = this.click_to_add_todo.bind(this);
 	}
 	componentWillReceiveProps (nextProps) {
 		this.setState({
@@ -28,10 +30,15 @@ class HomePage extends React.Component{
 		});
 	} 
 	change_new_todo (e) {
-		let inputed_new_value = e.target.value;
+		// let inputed_new_value = e.target.value;
 		this.setState({
-			new_todo: inputed_new_value
+			new_todo: e.target.value
 		});
+	}
+	click_to_add_todo () {
+		let value = ReactDOM.findDOMNode(this.refs.add_todo_value).value;
+		console.log("a")
+		this.props.add_todo(this.state.goal.id,value);
 	}
 	render(){
 		return(
@@ -78,12 +85,14 @@ class HomePage extends React.Component{
 								type="text"
 								value={this.state.new_todo}
 								placeholder ="新規タスク"
+								ref = "add_todo_value"
 								onChange={this.change_new_todo}
 							/>
 							<input 
 								className="form-input-btn"
 								type="button"
 								value="追加"
+								onClick = {this.click_to_add_todo}
 							/>
 							{(()=>{
 								if(this.state.todos){

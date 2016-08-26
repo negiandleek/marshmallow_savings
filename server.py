@@ -132,13 +132,11 @@ def read_doing(user_id):
 	r = HTTPResponse(state=200, body=encoded_json, content_type="application/json");
 	return r;
 
-
 # payloadの内容で分けようかな。
 @route("/get_goal",method="post")
 @req_auth
 def read_goal (user_id) :
 	results = get_active_goal(user_id);
-	print(results);
 
 	r = HTTPResponse(state=200,body="");
 	return r;
@@ -153,6 +151,52 @@ def cud_goal (user_id) :
 
 	if method == "POST":
 		pass;
+
+	elif method == "PUT":
+		pass;
+	
+	elif method == "DELETE":
+		pass;
+
+from app.api.todo import create_todo,update_todo;
+
+@route("/get_todo",method="post")
+@req_auth
+def get_todo (user_id) :
+	pass;
+
+@route("/todo", method = "post")
+@route("/todo", method = "put")
+@route("/todo", method = "delete")
+@req_auth
+def cud_todo (user_id):
+	method = request.method
+	payload = request.json["payload"];
+
+	if method == "POST":
+		goal_id = payload["goal_id"];
+		value = payload["value"];
+
+		try:
+			create_todo(goal_id,value)
+		except Exception as e:
+			print(str(e));
+
+			json_data = {
+				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
+			};
+			encode_json = json.dumps(json_data);
+			
+			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
+			return r;
+
+		json_data = {
+			"response_message": {"api":{"status": "200", "message": "FALSE", "data": "success create todo"}}
+		};
+		encode_json = json.dumps(json_data);
+
+		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
+		return r;
 
 	elif method == "PUT":
 		pass;
