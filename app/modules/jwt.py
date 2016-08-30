@@ -1,9 +1,11 @@
 import datetime;
 import hmac;
 import jwt;
+import json;
 import pymysql.cursors;
 from config.db import connection;
 from app.modules.error import UnauthenticationError;
+from bottle import HTTPResponse;
 
 with open("./app/env/private.pem","rb") as f:
 		private_pem = f.read();
@@ -42,11 +44,10 @@ def is_valid_jwt (str_jwt):
 			results = cursor.fetchone();
 			use_jwt = results["jwt"];
 
-		# print(use_jwt == str_jwt, "use_jwt:" + use_jwt + "str_jwt:" + str_jwt);
-
 	except Exception as e:
-		print("JwtError:" , str(e))
-		state = False;
+		print("JwtError:", str(e))
+		
+		return;
 
 	try:
 		if str_jwt != use_jwt:
@@ -54,7 +55,7 @@ def is_valid_jwt (str_jwt):
 			
 	except UnauthenticationError as e:
 		print("UnauthenticationError",str(e));
-		state = False;
-		user_id = "";
+		
+		return;
 
 	return state, user_id;

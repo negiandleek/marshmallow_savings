@@ -85,7 +85,16 @@ def twitter_callback():
 @route("/check_jwt", method='POST')
 def check_jwt () :
 	jwt = request.json["payload"];
-	state, user_id = is_valid_jwt(jwt);
+	try:
+		state, user_id = is_valid_jwt(jwt);
+
+	except:
+		json_data = {"message":"FALSE","data": "authentication error from jwt"};
+		encoded_json = json.dumps(json_data);
+		
+		r = HTTPResponse(status=401,body=encoded_json,content_type = "application/json");
+		return r;
+
 	user_info = user_modules.get_user_info(user_id);
 
 	if state:
@@ -177,26 +186,28 @@ def cud_todo (user_id):
 		goal_id = payload["goal_id"];
 		value = payload["value"];
 
-		try:
-			create_todo(goal_id,value)
-		except Exception as e:
-			print(str(e));
+		# try:
+		# 	todo_results = create_todo(goal_id,value)
+		# except Exception as e:
+		# 	print(str(e));
 
-			json_data = {
-				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
-			};
-			encode_json = json.dumps(json_data);
+		# 	json_data = {
+		# 		"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
+		# 	};
+		# 	encode_json = json.dumps(json_data);
 			
-			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
-			return r;
+		# 	r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
+		# 	return r;
 
-		json_data = {
-			"response_message": {"api":{"status": "200", "message": "FALSE", "data": "success create todo"}}
-		};
-		encode_json = json.dumps(json_data);
+		# json_data = {"todos": todo_results};
+		# response_message = {"api":{"status": "200", "message": "SUCCESS"}};
+		# encode_json = json.dumps(json_data);
 
-		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
+		# r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
+		# return r;
+		r = HTTPResponse(status=200, body="{'hoge':'aaa'}", content_type = "application/json");
 		return r;
+
 
 	elif method == "PUT":
 		pass;

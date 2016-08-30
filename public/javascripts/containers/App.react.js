@@ -20,7 +20,7 @@ class App extends Component {
 			<div className="root">
 				<div className="main">
 					{(() => {
-						if(this.props.is_auth){
+						if(this.props.is_auth === true){
 							return <HomePage 
 									get_doing = {this.props.get_doing}
 									doing_data = {this.props.doing_data}

@@ -4,19 +4,18 @@ from config.db import connection;
 def create_todo (goal_id, value):
 	with connection.cursor() as cursor:
 		sql = """INSERT INTO todos(goals_id, value)
-					VALUES (%s, %s);
-				SElECT id , value, achieve FROM todos
-					WHERE id = goal_id;"""
+					VALUES (%s, %s);"""
 
 		cursor.execute(sql,(goal_id, value));
 		connection.commit();
 
-	return;
+	return read_todo(goal_id);
 
 def read_todo (goal_id):
 	with connection.cursor() as cursor:
 		sql = """SELECT id, value, achieve FROM todos
-					WHERE goals_id = %s;"""
+					WHERE goals_id = %s
+					ORDER BY id DESC;"""
 
 		__result = cursor.execute(sql, (goal_id));
 		result = cursor.fetchall();

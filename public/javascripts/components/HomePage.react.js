@@ -37,7 +37,6 @@ class HomePage extends React.Component{
 	}
 	click_to_add_todo () {
 		let value = ReactDOM.findDOMNode(this.refs.add_todo_value).value;
-		console.log("a")
 		this.props.add_todo(this.state.goal.id,value);
 	}
 	render(){
@@ -95,7 +94,7 @@ class HomePage extends React.Component{
 								onClick = {this.click_to_add_todo}
 							/>
 							{(()=>{
-								if(this.state.todos){
+								if(this.state.todos instanceof Array){
 									return this.state.todos.map((items, index)=>{
 										return(
 											<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>

@@ -70,6 +70,11 @@ export default store => next => action => {
 		return remake_action_date;
 	}
 
+	// next(action_with({
+	// 		payload: payload,
+	// 		type: request_type
+	// 	}));
+
 	return call_api_func(method,endpoint,payload)
 		.then(function(res){
 			next(action_with({

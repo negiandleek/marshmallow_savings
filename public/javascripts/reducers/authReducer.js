@@ -13,7 +13,7 @@ function auth_reducer(state = initial_state, action){
 			});
 
 		case types.TWITTER_OAUTH_SUCCESS:
-			// location.href = action.res.url;
+			location.href = action.res.url;
 			return Object.assign({}, state, {
 				is_auth: "success_twitter"
 			});
@@ -28,7 +28,7 @@ function auth_reducer(state = initial_state, action){
 
 		case types.SIGIN_IN_SUCCESS:
 			return Object.assign({}, state, {
-				is_auth: "true"
+				is_auth: true
 			});
 
 		default:
