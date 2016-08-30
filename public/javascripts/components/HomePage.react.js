@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 
+import Todo from "./Todo.react";
+
 class HomePage extends React.Component{
 	constructor(props){
 		super(props);
@@ -36,8 +38,15 @@ class HomePage extends React.Component{
 		});
 	}
 	click_to_add_todo () {
-		let value = ReactDOM.findDOMNode(this.refs.add_todo_value).value;
-		this.props.add_todo(this.state.goal.id,value);
+		if(this.state.new_todo){
+			let value = ReactDOM.findDOMNode(this.refs.add_todo_value).value;
+			this.props.add_todo(this.state.goal.id,value);
+			this.setState({
+				new_todo: ""
+			})
+		}else{
+			alert("入力してください");
+		}
 	}
 	render(){
 		return(
@@ -78,7 +87,7 @@ class HomePage extends React.Component{
 						<header className="top-page-entory__todos__header">
 							<p>タスク</p>
 						</header>
-						<ul className="top-page-entory__todos__wrapper">
+						<div className="top-page-entory__todos__forms">
 							<input 
 								className="form-input-text"
 								type="text"
@@ -93,28 +102,32 @@ class HomePage extends React.Component{
 								value="追加"
 								onClick = {this.click_to_add_todo}
 							/>
+						</div>
+						<ul className="top-page-entory__todos__wrapper">
 							{(()=>{
 								if(this.state.todos instanceof Array){
 									return this.state.todos.map((items, index)=>{
-										return(
-											<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
-												<input 
-													className="form-input-text"
-													type="text"
-													value={items.value}
+										if(items.fetching){
+											return (
+												<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
+													<input 
+														className="form-input-text--fetching"
+														type="text"
+														value={items.value}
+													/>
+												</li>
+											)
+										}else{
+											return (
+												<Todo
+													update_todo = {this.props.update_todo}
+													items = {items}
+													key = {"todo-key-" + index} 
+													update_todo = {this.props.update_todo}
+													index = {index}
 												/>
-												<input 
-													className="form-input-btn"
-													type="button"
-													value="変更"
-												/>
-												<input
-													className="form-input-btn"
-													type="button"
-													value="削除"
-												/>
-											</li>
-										)
+											)
+										}
 									});
 								}else{
 									return "登録されていません"

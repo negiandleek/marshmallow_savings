@@ -186,32 +186,51 @@ def cud_todo (user_id):
 		goal_id = payload["goal_id"];
 		value = payload["value"];
 
-		# try:
-		# 	todo_results = create_todo(goal_id,value)
-		# except Exception as e:
-		# 	print(str(e));
+		try:
+			todo_results = create_todo(goal_id,value)
+		except Exception as e:
+			print(str(e));
 
-		# 	json_data = {
-		# 		"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
-		# 	};
-		# 	encode_json = json.dumps(json_data);
+			json_data = {
+				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
+			};
+			encode_json = json.dumps(json_data);
 			
-		# 	r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
-		# 	return r;
+			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
+			return r;
 
-		# json_data = {"todos": todo_results};
-		# response_message = {"api":{"status": "200", "message": "SUCCESS"}};
-		# encode_json = json.dumps(json_data);
+		json_data = {"todos": todo_results};
+		api_message = {"api":{"status": "200", "message": "SUCCESS", "data": "add todo success"}};
+		
+		json_data.update(api_message);
+		encode_json = json.dumps(json_data);
 
-		# r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
-		# return r;
-		r = HTTPResponse(status=200, body="{'hoge':'aaa'}", content_type = "application/json");
+		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
 		return r;
 
-
 	elif method == "PUT":
-		pass;
-	
+		todo_id = payload["todo_id"];
+		value = payload["value"];
+
+		try:
+			update_todo(todo_id, value);
+		except Exception as e:
+			print(str(e));
+
+			json_data = {
+				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
+			};
+			encode_json = json.dumps(json_data);
+			
+			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
+			return r;
+
+		api_message = {"api":{"status": "200", "message": "SUCCESS", "data": "update todo success"}};
+		encode_json = json.dumps(api_message);
+
+		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
+		return r;
+
 	elif method == "DELETE":
 		pass;
 

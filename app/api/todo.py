@@ -25,7 +25,7 @@ def read_todo (goal_id):
 def update_todo (todo_id, value):
 	with connection.cursor() as cursor:
 		sql = """UPDATE todos SET value = %s 
-					WHERE = %s;"""
+					WHERE id = %s;"""
 
 		cursor.execute(sql,(value, todo_id));
 		connection.commit();

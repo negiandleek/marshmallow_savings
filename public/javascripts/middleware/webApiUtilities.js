@@ -39,13 +39,24 @@ function call_api_func (_method, endpoint, _payload) {
 				.catch( (err) => {
 					reject(err);
 				})
+		}else if (method === "put"){
+			axios
+				.put(full_url,{payload})
+				.then((res) => {
+					resolve(res);
+				})
+				.catch((err) => {
+					reject(err);
+				})
+
 		}
 
 		if(typeof endpoint !== "string"){
 			throw new Error("urlは文字列に特定してください");
 		}
 
-		if (method !== "get" && method !== "post") {
+		if (method !== "get" && method !== "post"
+			&& method !== "put") {
 			throw new Error("そのようなhttpメソッドは使われていません");
 		}
 	})
@@ -70,16 +81,25 @@ export default store => next => action => {
 		return remake_action_date;
 	}
 
-	// next(action_with({
-	// 		payload: payload,
-	// 		type: request_type
-	// 	}));
+	try {
+		if(typeof payload === "string"){
+			let jwt = localStorage.getItem("marshmallow_jwt");
+			payload = jwt;
+		}else{
+			let jwt = localStorage.getItem("marshmallow_jwt");
+			payload["jwt"] = jwt;
+		}
+	}catch(e){
+		//TODO err 処理
+		console.error("local jwt error:",e);
+	}
 
 	return call_api_func(method,endpoint,payload)
 		.then(function(res){
 			next(action_with({
 				res: res.data,
-				type: success_type
+				type: success_type,
+				payload: payload
 			}))
 		})
 }

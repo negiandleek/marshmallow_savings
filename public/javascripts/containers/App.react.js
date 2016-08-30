@@ -21,16 +21,18 @@ class App extends Component {
 				<div className="main">
 					{(() => {
 						if(this.props.is_auth === true){
-							return <HomePage 
-									get_doing = {this.props.get_doing}
-									doing_data = {this.props.doing_data}
-									add_todo = {this.props.add_todo}
+							return <HomePage
+									{...this.props} 
+									// get_doing = {this.props.get_doing}
+									// doing_data = {this.props.doing_data}
+									// add_todo = {this.props.add_todo}
 								/>
 						}else{
 							return <LandingPage 
-								is_auth = {this.props.is_auth}
-								auth_action = {this.props.auth_action}
-								check_jwt = {this.props.check_jwt}
+								{...this.props}
+								// is_auth = {this.props.is_auth}
+								// auth_action = {this.props.auth_action}
+								// check_jwt = {this.props.check_jwt}
 							/>
 						}
 					})()}
@@ -53,7 +55,8 @@ function mapDispatchToProps(dispatch){
 		auth_action: bindActionCreators(index.oauth_twitter, dispatch),
 		check_jwt: bindActionCreators(index.check_jwt, dispatch),
 		get_doing: bindActionCreators(doing.get_doing, dispatch),
-		add_todo: bindActionCreators(todo.add_todo, dispatch)
+		add_todo: bindActionCreators(todo.add_todo, dispatch),
+		update_todo: bindActionCreators(todo.update_todo, dispatch)
 	}
 }
 
