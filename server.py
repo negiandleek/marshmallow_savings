@@ -9,6 +9,22 @@ from app.modules.auth import req_auth, sign_out;
 
 app = SessionMiddleware(app(), session_opts);
 
+failed_json_data = {
+	"api":{"status": "200", "message": "FALSE", "data": None}
+};
+
+succeeded_json_data = {
+	"api":{"status": "200", "message": "SUCCESS", "data": None}
+};
+
+def generate_response (json):
+	r = HTTPResponse(status = 200, body = json, content_type = "application/json");
+	return r;
+
+# def generate_failure_response (json):
+# 	r = HTTPResponse(status = 401, body = encoded, content_type = "application/json");
+# 	return r;
+
 #データベース、変数を複数にするかどうか命名規則を整える
 
 @route("/")
@@ -129,19 +145,27 @@ from app.api.todo import read_todo;
 @req_auth 
 def read_doing(user_id):
 	goal_results = get_active_goal(user_id);
-	todo_results = read_todo(goal_results["id"]);
 
-	json_data = {"goal": goal_results,"todos": todo_results};
-	response_message = {"api":{"status": "200", "message": "SUCCESS"}};
+	if goal_results is not None:
+		todo_results = read_todo(goal_results["id"]);
 
-	json_data.update(response_message);
+		json_data = {"goal": goal_results,"todos": todo_results};
+		succeeded_json_data["api"]["data"] = "success get doing data";
+		json_data.update(succeeded_json_data);
 
+	else:
+		json_data = {"goal": "", "todos": ""};
+		succeeded_json_data["api"]["data"] = "success get doing data. but empty";
+		json_data.update(succeeded_json_data);
+
+	
 	encoded_json = json.dumps(json_data);
-
-	r = HTTPResponse(state=200, body=encoded_json, content_type="application/json");
-	return r;
+	
+	return generate_response(encoded_json);
 
 # payloadの内容で分けようかな。
+from app.api.goal import create_goal, update_goal, delete_goal;
+
 @route("/get_goal",method="post")
 @req_auth
 def read_goal (user_id) :
@@ -150,24 +174,67 @@ def read_goal (user_id) :
 	r = HTTPResponse(state=200,body="");
 	return r;
 
-@route("/goal",method="post")
-@route("/goal",method="put")
-@route("/goal",method="delete")
+@route("/goal",method = "post")
+@route("/goal",method = "put")
+@route("/goal",method = "delete")
 @req_auth
 def cud_goal (user_id) :
 	method = request.method
 	payload = request.json["payload"];
 
 	if method == "POST":
-		pass;
+		value = payload["value"];
+
+		try:
+			goal_result = create_goal(user_id, value);
+			json_data = {"goal": goal_result}
+			succeeded_json_data["api"]["data"] = "success add goal";
+
+			json_data.update(succeeded_json_data);
+			encoded_json = json.dumps(json_data);
+
+		except Exception as e:
+			print(str(e));
+
+			succeeded_json_data["api"]["data"] = str(e);
+			encoded_json = json.dumps(succeeded_json_data);
+
+		return generate_response(encoded_json);
 
 	elif method == "PUT":
-		pass;
-	
-	elif method == "DELETE":
-		pass;
+		goal_id = payload["goal_id"];
+		value = payload["value"];
 
-from app.api.todo import create_todo,update_todo;
+		try:
+			update_goal(goal_id, value);
+			succeeded_json_data["api"]["data"] = "success update goal";
+
+		except Exception as e:
+			print(str(e));
+			succeeded_json_data["api"]["data"] = str(e);
+
+		encoded_json = json.dumps(succeeded_json_data);
+		return generate_response(encoded_json);
+
+	elif method == "DELETE":
+		goal_id = payload["goal_id"];
+		
+		try:
+			delete_goal(goal_id);
+		except Exception as e:
+			print(str(e));
+
+			failed_json_data["api"]["data"] = str(e);
+			encoded_json = json.dumps(failed_json_data);
+
+			return generate_response(encoded_json);
+		
+		succeeded_json_data["api"]["data"] = "success deleted todo";
+		encoded_json = json.dumps(succeeded_json_data);
+
+		return generate_response(encoded_json);
+
+from app.api.todo import create_todo, update_todo, delete_todo;
 
 @route("/get_todo",method="post")
 @req_auth
@@ -194,18 +261,18 @@ def cud_todo (user_id):
 			json_data = {
 				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
 			};
-			encode_json = json.dumps(json_data);
+			encoded_json = json.dumps(json_data);
 			
-			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
+			r = HTTPResponse(state=200, body=encoded_json, content_type = "application/json");
 			return r;
 
 		json_data = {"todos": todo_results};
 		api_message = {"api":{"status": "200", "message": "SUCCESS", "data": "add todo success"}};
 		
 		json_data.update(api_message);
-		encode_json = json.dumps(json_data);
+		encoded_json = json.dumps(json_data);
 
-		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
+		r = HTTPResponse(status=200, body=encoded_json, content_type = "application/json");
 		return r;
 
 	elif method == "PUT":
@@ -217,22 +284,35 @@ def cud_todo (user_id):
 		except Exception as e:
 			print(str(e));
 
-			json_data = {
-				"response_message": {"api":{"status": "200", "message": "FALSE", "data": str(e)}}
-			};
-			encode_json = json.dumps(json_data);
+			failed_json_data["api"]["data"] = str(e);
+			encoded_json = json.dumps(failed_json_data);
 			
-			r = HTTPResponse(state=200, body=encode_json, content_type = "application/json");
-			return r;
+			return generate_response(encoded_json);
 
-		api_message = {"api":{"status": "200", "message": "SUCCESS", "data": "update todo success"}};
-		encode_json = json.dumps(api_message);
+		succeeded_json_data["api"]["data"] = "update todo success";
+		encoded_json = json.dumps(succeeded_json_data);
 
-		r = HTTPResponse(status=200, body=encode_json, content_type = "application/json");
-		return r;
+		return generate_response(encoded_json)
 
 	elif method == "DELETE":
-		pass;
+		todo_id = payload["todo_id"];
+
+		try:
+			delete_todo(todo_id);
+
+		except Exception as e:
+			print(str(e));
+			
+			failed_json_data["api"]["data"] = str(e);
+			encoded_json = json.dumps(failed_json_data);
+
+			return generate_response(encoded_json);
+
+		succeeded_json_data["api"]["data"] = "success deleted todo";
+		encoded_json = json.dumps(succeeded_json_data);
+
+		return generate_response(encoded_json);
+
 
 route("/sign_out", method="post")(sign_out);
 	

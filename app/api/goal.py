@@ -8,7 +8,7 @@ def get_active_goal (user_id):
 		__result = cursor.execute(sql,(user_id));
 		result = cursor.fetchone();
 
-		return result;
+	return result;
 
 def get_achive_goal (user_id):
 	with connection.cursor() as cursor:
@@ -22,45 +22,43 @@ def create_goal (user_id, value):
 		sql = """INSERT INTO goals (user_id, value) 
 					VALUES (%s, %s);"""
 
-	cursor.execute(sql,(user_id, value));
-	connection.commit();
+		cursor.execute(sql,(user_id, value));
+		connection.commit();
 
-def update_goal (user_id ,value, goal_id):
+	return get_active_goal(user_id);
+
+def update_goal (goal_id, value):
 	with connection.cursor() as cursor:
 		sql = """UPDATE goals SET value = %s 
-					WHERE user_id = %s 
-						AND goal_id = %s"""
+					WHERE id = %s"""
 
-		cursor.execute(sql,(value, user_id, goal_id));
+		cursor.execute(sql,(value, goal_id));
+		connection.commit();
 
-def delete_goal (user_id, goal_id):
+def delete_goal (goal_id):
 	with connection.cursor() as cursor:
 		sql = """DELETE FROM goals
-					WHERE user_id = %s, goal_id = %s;"""
+					WHERE id = %s;"""
 
-		cursor.execute(sql,(user_id, goal_id));
+		cursor.execute(sql,(goal_id));
 
-def achieve_goal (user_id, goal_id):
+def achieve_goal (goal_id):
 	with connection.cursor() as cursor:
 		sql = """UPDATE goals SET achieve = 1, active = 0;
-					WHERE user_id = %s, goal_id = %s""";
+					WHERE goal_id = %s""";
 
-		cursor.execute(sql,(user_id, goal_id));
+		cursor.execute(sql,(goal_id));
 
-def increment_marshmallows_num (user_id, goal_id):
+def increment_marshmallows_num (goal_id):
 	with connection.cursor() as cursor:
 		sql = """UPDATE goals SET marshmallows_num = (
 						SELECT marshmallows_num + 1 
 						FROM (SELECT * FROM goals) AS c1 
-						WHERE c1.user_id = %s 
-						AND c1.id = %s
+						WHERE c1.id = %s
 						AND c1.active = 1 
 					) 
-					WHERE user_id = %s 
-					AND id = %s
+					WHERE id = %s
 					AND active = 1;"""
 
-		cursor.execute(sql,(user_id, goal_id, user_id, goal_id));
+		cursor.execute(sql,(goal_id, goal_id));
 		connection.commit()
-
-# update activity day;

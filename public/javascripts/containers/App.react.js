@@ -11,6 +11,8 @@ import HomePage from "../components/HomePage.react";
 import * as index from "../actions/index";
 import * as doing from "../actions/doing";
 import * as todo from "../actions/todo";
+import * as goal from "../actions/goal";
+
 class App extends Component {
 	constructor (props) {
 		super(props);
@@ -56,7 +58,13 @@ function mapDispatchToProps(dispatch){
 		check_jwt: bindActionCreators(index.check_jwt, dispatch),
 		get_doing: bindActionCreators(doing.get_doing, dispatch),
 		add_todo: bindActionCreators(todo.add_todo, dispatch),
-		update_todo: bindActionCreators(todo.update_todo, dispatch)
+		update_todo: bindActionCreators(todo.update_todo, dispatch),
+		delete_todo: bindActionCreators(todo.delete_todo, dispatch),
+		change_todo: bindActionCreators(todo.change_todo, dispatch),
+		add_goal: bindActionCreators(goal.add_goal, dispatch),
+		update_goal: bindActionCreators(goal.update_goal, dispatch),
+		delete_goal: bindActionCreators(goal.delete_goal, dispatch),
+		change_goal: bindActionCreators(goal.change_goal, dispatch)
 	}
 }
 

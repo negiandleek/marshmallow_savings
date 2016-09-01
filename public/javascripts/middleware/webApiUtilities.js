@@ -24,19 +24,19 @@ function call_api_func (_method, endpoint, _payload) {
 						payload: payload
 					}
 				})
-				.then( (res) => {
+				.then((res) => {
 					resolve(res);
 				})
-				.catch( (err) => {
+				.catch((err) => {
 					reject(err);
 				})
 		}else if (method === "post"){
 			axios
 				.post(full_url, {payload})
-				.then( (res) => {
+				.then((res) => {
 					resolve(res);
 				})
-				.catch( (err) => {
+				.catch((err) => {
 					reject(err);
 				})
 		}else if (method === "put"){
@@ -48,7 +48,19 @@ function call_api_func (_method, endpoint, _payload) {
 				.catch((err) => {
 					reject(err);
 				})
-
+		}else if (method === "delete"){
+			axios
+				.request({
+					url: full_url,
+					method: "delete",
+					data: {payload}
+				})
+				.then((res) => {
+					resolve(res)
+				})
+				.catch((err) => {
+					reject(err);
+				})
 		}
 
 		if(typeof endpoint !== "string"){
@@ -56,7 +68,7 @@ function call_api_func (_method, endpoint, _payload) {
 		}
 
 		if (method !== "get" && method !== "post"
-			&& method !== "put") {
+			&& method !== "put" && method !== "delete") {
 			throw new Error("そのようなhttpメソッドは使われていません");
 		}
 	})

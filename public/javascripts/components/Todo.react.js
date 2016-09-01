@@ -7,12 +7,6 @@ class Todo extends React.Component{
 			value: this.props.items.value,
 			id: this.props.items.id
 		}
-		this.change_todo = this.change_todo.bind(this);
-	}
-	change_todo (e) {
-		this.setState({
-			value: e.target.value 
-		});
 	}
 	render () {
 		return (
@@ -20,8 +14,11 @@ class Todo extends React.Component{
 				<input 
 					className = "form-input-text"
 					type = "text"
-					value = {this.state.value}
-					onChange = {this.change_todo}
+					value = {this.props.items.value}
+					onChange = {(e) => {
+						this.props.change_todo(e.target.value, this.props.index);
+					}}
+
 				/>
 				<input 
 					className = "form-input-btn"
@@ -35,6 +32,9 @@ class Todo extends React.Component{
 					className = "form-input-btn"
 					type = "button"
 					value = "削除"
+					onClick = {()=> {
+						this.props.delete_todo(this.state.id, this.props.index);
+					}}
 				/>
 			</li>
 		)

@@ -10,12 +10,11 @@ class HomePage extends React.Component{
 		this.props.get_doing(local_jwt);
 
 		this.state = {
-			goal: this.props.doing_data.goal || "",
-			todos: this.props.doing_data.todos || "",
-			new_todo: ""
+			new_todo: "",
+			new_goal: ""
 		};
 
-		this.change_goal = this.change_goal.bind(this);
+		this.change_new_goal = this.change_new_goal.bind(this);
 		this.change_new_todo = this.change_new_todo.bind(this);
 		this.click_to_add_todo = this.click_to_add_todo.bind(this);
 	}
@@ -25,12 +24,11 @@ class HomePage extends React.Component{
 			todos: nextProps.doing_data.todos
 		});
 	}
-	change_goal (e) {
-		let changed_goal_value = e.target.value;
+	change_new_goal (e) {
 		this.setState({
-			goal: {"value": changed_goal_value}
+			new_goal: e.target.value
 		});
-	} 
+	}
 	change_new_todo (e) {
 		// let inputed_new_value = e.target.value;
 		this.setState({
@@ -40,7 +38,7 @@ class HomePage extends React.Component{
 	click_to_add_todo () {
 		if(this.state.new_todo){
 			let value = ReactDOM.findDOMNode(this.refs.add_todo_value).value;
-			this.props.add_todo(this.state.goal.id,value);
+			this.props.add_todo(this.props.doing_data.goal.id,value);
 			this.setState({
 				new_todo: ""
 			})
@@ -57,84 +55,143 @@ class HomePage extends React.Component{
 						<header className="top-page-entory__goal__header">
 							<p>ゴール</p>
 						</header>
-						<input 
-							className="form-input-text"
-							type="text" 
-							value={(() => {
-								return this.state.goal.value || ""
-							})()}
-							placeholder = {(() => {
-								if (!this.state.goal.value){
-									return "新規目標"
+						{(() => {
+							if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"){
+								return (
+									<div className="top-page-entory__goal__forms">
+										<input 
+											className="form-input-text"
+											type="text" 
+											value={this.state.new_goal}
+											placeholder = "新規目標"
+											onChange={this.change_new_goal}
+										/>
+										<input
+											className="form-input-btn"
+											type="button"
+											value="追加"
+											onClick={()=>{
+												this.props.add_goal(this.state.new_goal);
+											}}
+										/>
+									</div>
+								)
+							}else{
+								if(this.props.doing_data.goal.fetching === true
+									|| this.props.doing_data.goal.fetching === 1){
+									return (
+										<div className="top-page-entory__goal__forms">
+											<input
+												className="form-input-text"
+												type="text" 
+												value={this.props.doing_data.goal.value}
+											/>
+										</div>
+									)
 								}else{
-									return;
+									return(
+										<div className="top-page-entory__goal__forms">
+											<input
+												className="form-input-text"
+												type="text" 
+												value={this.props.doing_data.goal.value}
+												onChange={(e) => {
+													this.props.change_goal(e.target.value);
+												}}
+											/>
+											<input
+												className="form-input-btn"
+												type="button"
+												value="変更"
+												onClick = {()=>{
+													if(!this.props.doing_data.goal.value){
+														alert("goalを入力してください")
+													}else{
+														this.props.update_goal(
+															this.props.doing_data.goal.id, 
+															this.props.doing_data.goal.value
+														);
+													}
+												}}
+											/>
+											<input
+												className="form-input-btn"
+												type="button"
+												value="削除"
+												onClick={()=>{
+													this.props.delete_goal(this.props.doing_data.goal.id)
+												}}
+											/>
+										</div>
+									)
 								}
-							})()}
-							onChange={this.change_goal}
-						/>
-						<input
-							className="form-input-btn"
-							type="button"
-							value="新規/変更"
-						/>
-						<input
-							className="form-input-btn"
-							type="button"
-							value="削除"
-						/>
+							}
+						})()}
 					</div>
-					<div className="top-page-entory__todos">
-						<header className="top-page-entory__todos__header">
-							<p>タスク</p>
-						</header>
-						<div className="top-page-entory__todos__forms">
-							<input 
-								className="form-input-text"
-								type="text"
-								value={this.state.new_todo}
-								placeholder ="新規タスク"
-								ref = "add_todo_value"
-								onChange={this.change_new_todo}
-							/>
-							<input 
-								className="form-input-btn"
-								type="button"
-								value="追加"
-								onClick = {this.click_to_add_todo}
-							/>
-						</div>
-						<ul className="top-page-entory__todos__wrapper">
-							{(()=>{
-								if(this.state.todos instanceof Array){
-									return this.state.todos.map((items, index)=>{
-										if(items.fetching){
-											return (
-												<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
-													<input 
-														className="form-input-text--fetching"
-														type="text"
-														value={items.value}
-													/>
-												</li>
-											)
-										}else{
-											return (
-												<Todo
-													update_todo = {this.props.update_todo}
-													items = {items}
-													key = {"todo-key-" + index} 
-													update_todo = {this.props.update_todo}
-													index = {index}
-												/>
-											)
-										}
-									});
-								}else{
-									return "登録されていません"
-								}
-							})()}
-						</ul>
-					</div>
+					{(()=>{
+						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
+							|| this.props.doing_data.goal.fetching === true){
+							return null;
+						}else{
+							return(
+								<div className="top-page-en)tory__todos">
+									<header className="top-page-entory__todos__header">
+										<p>タスク</p>
+									</header>
+									<div className="top-page-entory__todos__forms">
+										<input 
+											className="form-input-text"
+											type="text"
+											value={this.state.new_todo}
+											placeholder ="新規タスク"
+											ref = "add_todo_value"
+											onChange={this.change_new_todo}
+										/>
+										<input 
+											className="form-input-btn"
+											type="button"
+											value="追加"
+											onClick = {this.click_to_add_todo}
+										/>
+									</div>
+									<ul className="top-page-entory__todos__wrapper">
+										{(()=>{
+											if(this.props.doing_data.todos instanceof Array){
+												return this.props.doing_data.todos.map((items, index)=>{
+													if(items.fetching){
+														return (
+															<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
+																<input 
+																	className="form-input-text--fetching"
+																	type="text"
+																	value={items.value}
+																	onChange={() => {}}
+																/>
+															</li>
+														)
+													}else{
+														// console.log(items)
+														return (
+															<Todo
+																items = {items}
+																key = {"todo-key-" + index} 
+																index = {index}
+																change_todo = {this.props.change_todo}
+																update_todo = {this.props.update_todo}
+																delete_todo = {this.props.delete_todo}
+															/>
+														)
+													}
+												});
+											}else{
+												return "登録されていません"
+											}
+										})()}
+									</ul>
+								</div>
+							);
+						}
+					})()}
 				</div>
 			</div>
 		);

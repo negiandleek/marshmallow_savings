@@ -69,3 +69,51 @@ export function update_todo (todo_id, value, index){
 		dispatch(update_todo_api("todo","put", payload))
 	}
 }
+
+export const DELETE_TODO_REQUEST = "DELETE_TODO_REQUEST";
+export const DELETE_TODO_SUCCESS = "DELETE_TODO_SUCCESS";
+export const DELETE_TODO_FAILURE = "DELETE_TODO_FAILURE";
+
+function delete_todo_request (payload) {
+	return {
+		type: DELETE_TODO_REQUEST,
+		payload: payload,
+	}
+}
+
+function delete_todo_api (endpoint, method, payload){
+	return{
+		[CALL_API]: {
+			types: [DELETE_TODO_REQUEST,DELETE_TODO_SUCCESS, DELETE_TODO_FAILURE],
+			endpoint: endpoint,
+			method: method,
+			payload: payload
+		}
+	}
+}
+
+export function delete_todo (todo_id, index){
+	let payload = {
+		todo_id: todo_id,
+		index: index
+	};
+
+	return (dispatch, getState) => {
+		dispatch(delete_todo_request(payload));
+		dispatch(delete_todo_api("todo","delete", payload))
+	}
+}
+
+export const CHANGE_TODO = "CHANGE_TODO";
+
+export function change_todo (value, index) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: CHANGE_TODO,
+			payload: {
+				value,
+				index
+			}
+		});
+	}
+}
