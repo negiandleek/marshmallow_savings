@@ -24,13 +24,10 @@ def req_auth (func):
 				# NOW()時間がずれている
 				with connection.cursor() as cursor:
 					sql = """UPDATE todos SET achieve = 0
-								WHERE goals_id = %s 
-								AND 1 <= DATEDIFF(
-									NOW(),
-									(SELECT last_update FROM users
-										WHERE user_id = %s)
-								)"""
-					cursor.execute(sql,(goals_id, user_id));
+								WHERE goals_id = %s
+								AND 1 <= DATEDIFF(NOW(),(SELECT last_update FROM users WHERE user_id = %s))"""
+					result=cursor.execute(sql,(goals_id, user_id));
+					print(result);
 					connection.commit();
 					
 				with connection.cursor() as cursor:
