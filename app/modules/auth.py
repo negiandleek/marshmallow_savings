@@ -26,8 +26,7 @@ def req_auth (func):
 					sql = """UPDATE todos SET achieve = 0
 								WHERE goals_id = %s
 								AND 1 <= DATEDIFF(NOW(),(SELECT last_update FROM users WHERE user_id = %s))"""
-					result=cursor.execute(sql,(goals_id, user_id));
-					print(result);
+					cursor.execute(sql,(goals_id, user_id));
 					connection.commit();
 					
 				with connection.cursor() as cursor:

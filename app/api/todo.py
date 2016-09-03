@@ -42,5 +42,21 @@ def delete_todo (todo_id):
 
 	return;
 
-def toggle_todo (todo_id):
-	pass;
+def achieve_toggle_todo (todo_id):
+	with connection.cursor() as cursor:
+		sql = """SELECT achieve FROM todos
+					WHERE id = %s;""";
+
+		cursor.execute(sql, (todo_id));
+		result = cursor.fetchone();
+
+	int_bool = 0 if result["achieve"] else 1
+
+	with connection.cursor() as cursor:
+		sql = """UPDATE todos SET achieve = %s
+					WHERE id = %s;""" 
+
+		cursor.execute(sql, (int_bool, todo_id));
+		connection.commit();
+
+	return;

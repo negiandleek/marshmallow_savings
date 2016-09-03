@@ -42,6 +42,17 @@ function doing_reducer(state = initial_state, action){
 		case todo_types.ADD_TODO_FAILURE:
 			return state;
 
+		case todo_types.CHANGE_TODO:
+			var value = action.payload.value;
+			var index = action.payload.index;
+			
+			var new_state = state.todos.concat();
+			new_state[index]["value"] = value;
+
+			return Object.assign({}, state, {
+				todos: new_state
+			}); 
+
 		case todo_types.UPDATE_TODO_REQUEST:
 			var value = action.payload.value;
 			var id = action.payload.todo_id;
@@ -97,16 +108,20 @@ function doing_reducer(state = initial_state, action){
 		case todo_types.DELETE_TODO_FAILURE:
 			return state;
 
-		case todo_types.CHANGE_TODO:
-			var value = action.payload.value;
+		case todo_types.ACHIEVE_TODO_REQUEST:
 			var index = action.payload.index;
-			
-			var new_state = state.todos.concat();
-			new_state[index]["value"] = value;
 
-			return Object.assign({}, state, {
-				todos: new_state
-			}); 
+			var new_state = Object.assign({}, state);
+			new_state["todos"][index]["achieve"] = !new_state["todos"][index]["achieve"];
+
+			return new_state;
+
+		case todo_types.ACHIEVE_TODO_SUCCESS:
+			return state;
+
+		case todo_types.ACHIEVE_TODO_FAILURE:
+			return state;
+
 
 		case goal_types.CHANGE_GOAL:
 			var value = action.payload.value;
@@ -168,6 +183,19 @@ function doing_reducer(state = initial_state, action){
 
 		case goal_types.DELETE_GOAL_FAILURE:
 			return state;
+
+		case goal_types.INCREMENT_MARSHMALLOWS_REQUEST:
+			var new_state = Object.assign({}, state);
+			new_state.goal.marshmallows_num += 1;
+			return new_state;
+
+		case goal_types.INCREMENT_MARSHMALLOWS_SUCCESS:
+			return state;
+
+		case goal_types.INCREMENT_MARSHMALLOWS_FAILURE:
+			var new_state = Object.assign({}, state);
+			new_state.goal.marshmallows_num -= 1;
+			return new_state;
 
 		default:
 			return state;

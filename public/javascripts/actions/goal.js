@@ -110,3 +110,35 @@ export function update_goal (goal_id, value) {
 		dispatch(update_goal_api("goal","put", payload))
 	}
 }
+
+export const INCREMENT_MARSHMALLOWS_REQUEST = "INCREMENT_MARSHMALLOWS_REQUEST";
+export const INCREMENT_MARSHMALLOWS_SUCCESS = "INCREMENT_MARSHMALLOWS_SUCCESS";
+export const INCREMENT_MARSHMALLOWS_FAILURE = "INCREMENT_MARSHMALLOWS_FAILURE";
+
+function increment_marshmallows_request () {
+	return {
+		type: INCREMENT_MARSHMALLOWS_REQUEST,
+	}
+}
+
+function incremnet_marshmallows_api (endpoint, method, payload) {
+	return {
+		[CALL_API]: {
+			types: [INCREMENT_MARSHMALLOWS_REQUEST, INCREMENT_MARSHMALLOWS_SUCCESS, INCREMENT_MARSHMALLOWS_FAILURE],
+			endpoint,
+			method,
+			payload
+		}
+	}
+}
+
+export function increment_marshmallows (goal_id) {
+	let payload = {
+		goal_id
+	};
+
+	return (dispatch, getState) => {
+		dispatch(increment_marshmallows_request())
+		dispatch(incremnet_marshmallows_api("increment_marshmallows","put", payload))
+	}
+}

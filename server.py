@@ -10,11 +10,11 @@ from app.modules.auth import req_auth, sign_out;
 app = SessionMiddleware(app(), session_opts);
 
 failed_json_data = {
-	"api":{"status": "200", "message": "FALSE", "data": None}
+	"api":{"status": "FAILURE", "message": "", "data": None}
 };
 
 succeeded_json_data = {
-	"api":{"status": "200", "message": "SUCCESS", "data": None}
+	"api":{"status": "SUCCESS", "message": "", "data": None}
 };
 
 def generate_response (json):
@@ -312,6 +312,51 @@ def cud_todo (user_id):
 		encoded_json = json.dumps(succeeded_json_data);
 
 		return generate_response(encoded_json);
+
+from app.api.todo import achieve_toggle_todo;
+
+@route("/achieve_todo", method="post")
+@req_auth
+def achieve_todo (arg) :
+	payload = request.json["payload"];
+	todo_id = payload["todo_id"];
+	
+	try:
+		achieve_toggle_todo(todo_id);
+		succeeded_json_data["api"]["data"] = "success achieve toggle todo";
+
+	except Exception as e:
+		succeeded_json_data["api"]["data"] = str(e);
+
+	encdoed_json = json.dumps(succeeded_json_data);
+
+	return generate_response(encdoed_json);
+
+from app.api.goal import increment_marshmallows_num;
+
+@route("/increment_marshmallows",method = "put")
+@req_auth
+def increment_marshmallows (arg):
+	payload = request.json["payload"];
+	goal_id = payload["goal_id"];
+
+	try:
+		result = increment_marshmallows_num(goal_id);
+		if not(result):
+			raise Exception("failure increment marshmallows");
+
+		succeeded_json_data["api"]["message"] = "success increment marshmallows num";
+		
+		encoded_json = json.dumps(succeeded_json_data);
+
+	except Exception as e:
+		failed_json_data["api"]["message"] = str(e);
+
+		encoded_json = json.dumps(failed_json_data);
+
+	return generate_response(encoded_json);
+
+
 
 
 route("/sign_out", method="post")(sign_out);

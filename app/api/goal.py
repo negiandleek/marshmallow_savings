@@ -51,14 +51,33 @@ def achieve_goal (goal_id):
 
 def increment_marshmallows_num (goal_id):
 	with connection.cursor() as cursor:
-		sql = """UPDATE goals SET marshmallows_num = (
-						SELECT marshmallows_num + 1 
-						FROM (SELECT * FROM goals) AS c1 
-						WHERE c1.id = %s
-						AND c1.active = 1 
-					) 
+		sql = """UPDATE goals SET 
+					marshmallows_num  = (
+						SELECT marshmallows_num + 1 FROM (
+							SELECT * FROM goals
+						) AS c1 WHERE c1.id = %s
+					),
+					last_update = NOW() 
 					WHERE id = %s
-					AND active = 1;"""
+					AND active = 1 
+					AND 1 <= DATEDIFF(
+						NOW(), 
+						(
+							SELECT last_update FROM (
+								SELECT * FROM goals
+							) AS c2 WHERE c2.id = %s
+						)
+					);"""
 
-		cursor.execute(sql,(goal_id, goal_id));
-		connection.commit()
+		execution_result = cursor.execute(sql,(goal_id, goal_id, goal_id));
+		connection.commit();
+
+	if execution_result:
+		with connection.cursor() as cursor:
+			sql = """INSERT INTO activity_date (goal_id, date)
+				VALUES (%s, NOW());"""
+
+			cursor.execute(sql,(goal_id));
+			connection.commit();
+
+	return execution_result;

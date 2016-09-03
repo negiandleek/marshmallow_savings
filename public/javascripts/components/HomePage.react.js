@@ -134,7 +134,7 @@ class HomePage extends React.Component{
 							return null;
 						}else{
 							return(
-								<div className="top-page-en)tory__todos">
+								<div className="top-page-entory__todos">
 									<header className="top-page-entory__todos__header">
 										<p>タスク</p>
 									</header>
@@ -170,7 +170,6 @@ class HomePage extends React.Component{
 															</li>
 														)
 													}else{
-														// console.log(items)
 														return (
 															<Todo
 																items = {items}
@@ -179,6 +178,7 @@ class HomePage extends React.Component{
 																change_todo = {this.props.change_todo}
 																update_todo = {this.props.update_todo}
 																delete_todo = {this.props.delete_todo}
+																achieve_todo = {this.props.achieve_todo}
 															/>
 														)
 													}
@@ -190,6 +190,26 @@ class HomePage extends React.Component{
 									</ul>
 								</div>
 							);
+						}
+					})()}
+					{(()=>{
+						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
+							|| this.props.doing_data.goal.fetching === true){
+							return null;
+						}else{
+							return (
+								<div className="top-page-entory__marshmallow">
+									{this.props.doing_data.goal.marshmallows_num}
+									<input 
+										className="form-input-btn"
+										type="button" 
+										value="nice fight"
+										onClick={()=>{
+											this.props.incremnet_marshmallows(this.props.doing_data.goal.id)
+										}}
+									/>
+								</div>
+							)
 						}
 					})()}
 				</div>

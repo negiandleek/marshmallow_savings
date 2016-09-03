@@ -61,10 +61,12 @@ function mapDispatchToProps(dispatch){
 		update_todo: bindActionCreators(todo.update_todo, dispatch),
 		delete_todo: bindActionCreators(todo.delete_todo, dispatch),
 		change_todo: bindActionCreators(todo.change_todo, dispatch),
+		achieve_todo: bindActionCreators(todo.achieve_todo, dispatch),
 		add_goal: bindActionCreators(goal.add_goal, dispatch),
 		update_goal: bindActionCreators(goal.update_goal, dispatch),
 		delete_goal: bindActionCreators(goal.delete_goal, dispatch),
-		change_goal: bindActionCreators(goal.change_goal, dispatch)
+		change_goal: bindActionCreators(goal.change_goal, dispatch),
+		incremnet_marshmallows: bindActionCreators(goal.increment_marshmallows, dispatch)
 	}
 }
 

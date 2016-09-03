@@ -35,6 +35,20 @@ export function add_todo (goal_id, value){
 	}
 }
 
+export const CHANGE_TODO = "CHANGE_TODO";
+
+export function change_todo (value, index) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: CHANGE_TODO,
+			payload: {
+				value,
+				index
+			}
+		});
+	}
+}
+
 export const UPDATE_TODO_REQUEST = "UPDATE_TODO_REQUEST";
 export const UPDATE_TODO_SUCCESS = "UPDATE_TODO_SUCCESS";
 export const UPDATE_TODO_FAILURE = "UPDATE_TODO_FAILURE";
@@ -104,16 +118,36 @@ export function delete_todo (todo_id, index){
 	}
 }
 
-export const CHANGE_TODO = "CHANGE_TODO";
+export const ACHIEVE_TODO_REQUEST = "ACHIEVE_TODO_REQUEST";
+export const ACHIEVE_TODO_SUCCESS = "ACHIEVE_TODO_SUCCESS";
+export const ACHIEVE_TODO_FAILURE = "ACHIEVE_TODO_FAILURE";
 
-export function change_todo (value, index) {
+function achieve_todo_request (payload) {
+	return {
+		type: ACHIEVE_TODO_REQUEST,
+		payload: payload,
+	}
+}
+
+function achieve_todo_api (endpoint, method, payload){
+	return{
+		[CALL_API]: {
+			types: [ACHIEVE_TODO_REQUEST,ACHIEVE_TODO_SUCCESS, ACHIEVE_TODO_FAILURE],
+			endpoint: endpoint,
+			method: method,
+			payload: payload
+		}
+	}
+}
+
+export function achieve_todo (todo_id, index){
+	let payload = {
+		todo_id,
+		index
+	};
+
 	return (dispatch, getState) => {
-		dispatch({
-			type: CHANGE_TODO,
-			payload: {
-				value,
-				index
-			}
-		});
+		dispatch(achieve_todo_request(payload));
+		dispatch(achieve_todo_api("achieve_todo","post", payload))
 	}
 }

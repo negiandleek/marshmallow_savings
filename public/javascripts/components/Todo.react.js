@@ -12,6 +12,20 @@ class Todo extends React.Component{
 		return (
 			<li className="top-page-entory__todos__wrappr__item">
 				<input 
+					className = "form-input-checkbox"
+					type = "checkbox"
+					checked = {(()=>{
+						if(this.props.items.achieve){
+							return "checked"
+						}else{
+							return "";
+						}
+					})()}
+					onChange = {()=>{
+						this.props.achieve_todo(this.props.items.id, this.props.index)
+					}}
+				/>
+				<input 
 					className = "form-input-text"
 					type = "text"
 					value = {this.props.items.value}

@@ -43,7 +43,11 @@ function call_api_func (_method, endpoint, _payload) {
 			axios
 				.put(full_url,{payload})
 				.then((res) => {
-					resolve(res);
+					if(res.data.api.status === "SUCCESS"){
+						resolve(res);
+					}else{
+						reject(res);
+					}
 				})
 				.catch((err) => {
 					reject(err);
@@ -111,6 +115,13 @@ export default store => next => action => {
 			next(action_with({
 				res: res.data,
 				type: success_type,
+				payload: payload
+			}))
+		})
+		.catch(function(err){
+			next(action_with({
+				res: err.data,
+				type: failure_type,
 				payload: payload
 			}))
 		})
