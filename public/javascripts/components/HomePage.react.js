@@ -18,12 +18,6 @@ class HomePage extends React.Component{
 		this.change_new_todo = this.change_new_todo.bind(this);
 		this.click_to_add_todo = this.click_to_add_todo.bind(this);
 	}
-	componentWillReceiveProps (nextProps) {
-		this.setState({
-			goal: nextProps.doing_data.goal,
-			todos: nextProps.doing_data.todos
-		});
-	}
 	change_new_goal (e) {
 		this.setState({
 			new_goal: e.target.value

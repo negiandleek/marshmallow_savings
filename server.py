@@ -356,8 +356,21 @@ def increment_marshmallows (arg):
 
 	return generate_response(encoded_json);
 
+from app.api.activity import get_actived_goal;
 
+@route("/read_actived_date")
+@req_auth
+def read_activity_date (user_id):
+	payload = request.json["payload"];
+	goal_id = payload["goal_id"];
 
+	try:
+		get_actived_goal(goal_id);
+
+	except Exception as e:
+		print(e);
+
+	return;
 
 route("/sign_out", method="post")(sign_out);
 	

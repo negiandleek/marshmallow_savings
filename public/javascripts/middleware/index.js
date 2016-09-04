@@ -1,23 +1,13 @@
 import {CALL_API} from "../middleware/webApiUtilities";
 
 export const logger = store => next => action => {
-	if (action[CALL_API]) {
-		console.group(action[CALL_API].types);
-			console.info("dispatching", action);
-			let result = next(action);
-			console.log("state",store.getState());
-		console.groupEnd(action[CALL_API].types);
-
-		return result;	
-	} else {
-		console.group(action.type);
-			console.info("dispatching", action);
-			let result = next(action);
-			console.log("state",store.getState());
-		console.groupEnd(action.type);
-		
-		return result;
-	}
+	console.group(action.type);
+		console.info("dispatching", action);
+		let result = next(action);
+		console.log("state",store.getState());
+	console.groupEnd(action.type);
+	
+	// return result
 }
 
 export const crash_reporter = store => next => action => {
