@@ -4,12 +4,6 @@ export const GET_ACTIVED_DATE_REQUEST = "GET_ACTIVED_DATE_REQUEST";
 export const GET_ACTIVED_DATE_SUCCESS = "GET_ACTIVED_DATE_SUCCESS";
 export const GET_ACTIVED_DATE_FAILURE = "GET_ACTIVED_DATE_FAILURE";
 
-function get_actived_date_api () {
-	return {
-		type: GET_ACTIVED_DATE_REQUEST,
-	}
-}
-
 function get_actived_date_api (endpoint, method, payload){
 	return{
 		[CALL_API]: {
@@ -26,7 +20,6 @@ export function get_actived_date (goal_id) {
 		goal_id
 	};
 	return (dispatch, getState) => {
-		dispatch(get_actived_date_api);
 		dispatch(get_actived_date_api("read_actived_date", "post", payload))
 	}
 }

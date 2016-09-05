@@ -2,11 +2,12 @@ from config.db import connection;
 
 def get_active_goal (user_id):
 	with connection.cursor() as cursor:
-		sql = """SELECT id, value, marshmallows_num FROM goals 
+		sql = """SELECT id, value, marshmallows_num, create_date FROM goals 
 					WHERE user_id = %s and active = 1"""
 
 		__result = cursor.execute(sql,(user_id));
 		result = cursor.fetchone();
+		result["create_date"] = result["create_date"].strftime("%Y-%m-%d");
 
 	return result;
 

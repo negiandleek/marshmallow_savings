@@ -1,31 +1,26 @@
-import * as doing_types from "../actions/doing";
-import * as todo_types from "../actions/todo";
-import * as goal_types from "../actions/goal";
+import * as active_types from "../actions/active";
 
 const initial_state = {
-	actived_date: {
-		fetching: false,
-		date: ""
-	}
+	fetching: false,
+	date: ""
 }
 
 function active_reducer(state = initial_state, action){
-	switch (action) {
-		case doing_types.GET_DOING_REQUEST:
+	switch (action.type) {
+		case active_types.GET_ACTIVED_DATE_REQUEST:
 			var new_state = Object.assign({},state);
 			new_state["fetching"] = true;
 
 			return new_state;
 
-		case doing_types.GET_DOING_SUCCESS:
-			var data = action.res;
+		case active_types.GET_ACTIVED_DATE_SUCCESS:
+			var date = action.res.data;
+			return Object.assign({},state,{
+				fetching: true,
+				date: date
+			});
 
-			var new_state = Object.assign({},state);
-			new_state["date"] = true;
-
-			return new_state;
-
-		case doing_types.GET_DOING_FAILURE:
+		case active_types.GET_ACTIVED_DATE_FAILURE:
 			return state;
 
 		default:
@@ -33,4 +28,4 @@ function active_reducer(state = initial_state, action){
 	}
 }
 
-module.exports =  active_reducer;
+module.exports = active_reducer;

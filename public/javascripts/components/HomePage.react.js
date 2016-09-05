@@ -212,6 +212,18 @@ class HomePage extends React.Component{
 						}
 					})()}
 				</div>
+				<div className="top-page-actived-date">
+					{(() => {
+						// let created_goal_date_str = this.props.doing_data.goal.create_date || "";
+						// let actived_date_list = this.props.actived_date || "";
+						// if(!created_goal_date_str || !actived_date_list){
+						// 	return;
+						// }
+						// let now = new Date();
+						// let create_goal_date = new Date(created_goal_date_str);
+						// let diff = (now.getTime() - create_goal_date.getTime()) / (60 * 60 * 24 * 1000);
+					})()};
+				</div>
 			</div>
 		);
 	}

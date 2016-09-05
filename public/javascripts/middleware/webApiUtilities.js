@@ -28,6 +28,7 @@ function call_api_func (_method, endpoint, _payload) {
 					resolve(res);
 				})
 				.catch((err) => {
+					// console.log("aaaaaaaaaaa",err)
 					reject(err);
 				})
 		}else if (method === "post"){
@@ -82,7 +83,6 @@ export const CALL_API = Symbol('Call API');
 
 export default store => next => action => {
 	const call_api = action[CALL_API];
-
 	if(typeof call_api === "undefined"){
 		return next(action);
 	}
@@ -110,6 +110,10 @@ export default store => next => action => {
 		console.error("local jwt error:",e);
 	}
 
+	next(action_with({
+		type: request_type
+	}));
+
 	return call_api_func(method,endpoint,payload)
 		.then(function(res){
 			next(action_with({
@@ -118,11 +122,12 @@ export default store => next => action => {
 				payload: payload
 			}))
 		})
-		.catch(function(err){
-			next(action_with({
-				res: err.data,
-				type: failure_type,
-				payload: payload
-			}))
-		})
+		// .catch(function(err){
+		// 	console.log(err);
+		// 	next(action_with({
+		// 		res: err.data,
+		// 		type: failure_type,
+		// 		payload: payload
+		// 	}))
+		// })
 }

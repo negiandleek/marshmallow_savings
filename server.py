@@ -366,7 +366,7 @@ def read_activity_date (user_id):
 
 	try:
 		result = get_actived_goal(goal_id);
-		succeeded_json_data["api"]["data"] = result;
+		succeeded_json_data["data"] = result;
 		succeeded_json_data["api"]["message"] = "success get actived date";
 
 	except Exception as e:

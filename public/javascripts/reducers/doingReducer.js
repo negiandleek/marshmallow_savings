@@ -10,10 +10,11 @@ const initial_state = {
 function doing_reducer(state = initial_state, action){
 	switch (action.type) {
 		case doing_types.GET_DOING_REQUEST:
-			return Object.assign({},state, {
-				goal: "fetching",
-				todos: "fetching"
-			});
+			return state;
+			// return Object.assign({},state, {
+			// 	goal: "fetching",
+			// 	todos: "fetching"
+			// });
 
 		case doing_types.GET_DOING_SUCCESS:
 			var data = action.res;
@@ -23,7 +24,7 @@ function doing_reducer(state = initial_state, action){
 			});
 
 		case doing_types.GET_DOING_FAILURE:
-			return;
+			return state;
 
 		case todo_types.ADD_TODO_REQUEST:
 			var value = action.payload.value;
