@@ -196,6 +196,9 @@ function doing_reducer(state = initial_state, action){
 			var new_state = Object.assign({}, state);
 			new_state.goal.marshmallows_num -= 1;
 			return new_state;
+
+		default:
+			return state;
 	}
 }
 

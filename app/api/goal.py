@@ -19,8 +19,8 @@ def get_achive_goal (user_id):
 
 def create_goal (user_id, value):
 	with connection.cursor() as cursor:
-		sql = """INSERT INTO goals (user_id, value) 
-					VALUES (%s, %s);"""
+		sql = """INSERT INTO goals (user_id, value, create_date) 
+					VALUES (%s, %s, NOW());"""
 
 		cursor.execute(sql,(user_id, value));
 		connection.commit();

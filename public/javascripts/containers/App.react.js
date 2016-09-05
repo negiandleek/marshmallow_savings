@@ -12,6 +12,7 @@ import * as index from "../actions/index";
 import * as doing from "../actions/doing";
 import * as todo from "../actions/todo";
 import * as goal from "../actions/goal";
+import * as active from "../actions/active";
 
 class App extends Component {
 	constructor (props) {
@@ -48,7 +49,8 @@ class App extends Component {
 function mapStateToProps(state){
 	return {
 		is_auth: state.authReducer.is_auth,
-		doing_data: state.doingReducer
+		doing_data: state.doingReducer,
+		actived_date: state.activeReducer
 	}
 }
 
@@ -66,7 +68,8 @@ function mapDispatchToProps(dispatch){
 		update_goal: bindActionCreators(goal.update_goal, dispatch),
 		delete_goal: bindActionCreators(goal.delete_goal, dispatch),
 		change_goal: bindActionCreators(goal.change_goal, dispatch),
-		incremnet_marshmallows: bindActionCreators(goal.increment_marshmallows, dispatch)
+		incremnet_marshmallows: bindActionCreators(goal.increment_marshmallows, dispatch),
+		get_actived_date: bindActionCreators(active.get_actived_date, dispatch)
 	}
 }
 

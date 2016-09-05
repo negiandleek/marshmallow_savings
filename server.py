@@ -358,19 +358,24 @@ def increment_marshmallows (arg):
 
 from app.api.activity import get_actived_goal;
 
-@route("/read_actived_date")
+@route("/read_actived_date", method="post")
 @req_auth
 def read_activity_date (user_id):
 	payload = request.json["payload"];
 	goal_id = payload["goal_id"];
 
 	try:
-		get_actived_goal(goal_id);
+		result = get_actived_goal(goal_id);
+		succeeded_json_data["api"]["data"] = result;
+		succeeded_json_data["api"]["message"] = "success get actived date";
 
 	except Exception as e:
-		print(e);
+		print(str(e));
+		succeeded_json_data["api"]["message"] = str(e);
 
-	return;
+	encoded_json = json.dumps(succeeded_json_data);
+
+	return generate_response(encoded_json);
 
 route("/sign_out", method="post")(sign_out);
 	

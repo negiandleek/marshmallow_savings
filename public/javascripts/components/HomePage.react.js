@@ -40,6 +40,11 @@ class HomePage extends React.Component{
 			alert("入力してください");
 		}
 	}
+	componentWillReceiveProps(nextProps){
+		if(this.props.doing_data.goal.id !== nextProps.doing_data.goal.id){
+			this.props.get_actived_date(nextProps.doing_data.goal.id);
+		};
+	}
 	render(){
 		return(
 			<div className="top-page">
