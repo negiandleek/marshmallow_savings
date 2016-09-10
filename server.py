@@ -377,6 +377,6 @@ def read_activity_date (user_id):
 
 	return generate_response(encoded_json);
 
-route("/sign_out", method="post")(sign_out);
-	
-run(app=app,host="192.168.11.3",port="1234",debug=True, reloader=True);
+# route("/sign_out", method="post"
+
+run(app=app,host="192.168.11.11",port="1234",debug=True, reloader=True);

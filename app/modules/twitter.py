@@ -3,7 +3,7 @@
 import tweepy;
 import app.env.secret as private;
 
-CALLBACK_URL = "http://192.168.11.3:4321/callback"
+CALLBACK_URL = "http://192.168.11.11:4321/callback"
 
 def twitter_api(access_token = None, access_token_secret = None):
     auth = tweepy.OAuthHandler(
