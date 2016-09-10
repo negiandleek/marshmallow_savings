@@ -214,14 +214,48 @@ class HomePage extends React.Component{
 				</div>
 				<div className="top-page-actived-date">
 					{(() => {
-						// let created_goal_date_str = this.props.doing_data.goal.create_date || "";
-						// let actived_date_list = this.props.actived_date || "";
-						// if(!created_goal_date_str || !actived_date_list){
-						// 	return;
-						// }
-						// let now = new Date();
-						// let create_goal_date = new Date(created_goal_date_str);
-						// let diff = (now.getTime() - create_goal_date.getTime()) / (60 * 60 * 24 * 1000);
+						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
+							|| this.props.doing_data.goal.fetching === true){
+							return null;
+						}else{
+							let goal_data = this.props.doing_data.goal || "";
+							let actived_date_list = this.props.actived_date || "";
+							if(!goal_data.create_date || !actived_date_list){
+								return;
+							}
+							let now = new Date();
+							let create_goal_date = new Date(goal_data.create_date);
+							let diff = (now.getTime() - create_goal_date.getTime()) / (60 * 60 * 24 * 1000);
+							// console.log(create_goal_date,diff);
+							// white gray pink
+							if(diff <= 91){
+								
+							}else{
+								let datetime = new Date();
+								datetime.setDate(datetime.getDate() - 90);
+								let day = datetime.getDate();
+								let month = datetime.getMonth() + 1;
+								let year = datetime.getFullYear();
+								let month_last_day = new Date(year, month, 0);
+								month_last_day = month_last_day.getDate();
+
+								for(let i = 1; i <= 13; i += 1){
+									for(let j = 1; j <= 7; j += 1){
+										console.log(year + "/" + month + "/" + day);
+										day += 1;
+										if(day > month_last_day){
+											datetime.setMonth(datetime.getMonth() + 1);
+											datetime.setDate(1);
+											day = datetime.getDate();
+											month = datetime.getMonth() + 1;
+											year = datetime.getFullYear();
+											month_last_day = new Date(year, month, 0);
+											month_last_day = month_last_day.getDate();
+										}
+									}
+								}
+							}
+						}
 					})()};
 				</div>
 			</div>
