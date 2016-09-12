@@ -2,6 +2,13 @@ import React from "react";
 import ReactDOM from 'react-dom';
 
 import Todo from "./Todo.react";
+import ActivedDate from "./ActivedDate.react";
+
+// 0埋め
+function date_zello_fill (value) {
+	let num = ("0" + value).substr(-2);
+	return num;
+}
 
 class HomePage extends React.Component{
 	constructor(props){
@@ -212,14 +219,14 @@ class HomePage extends React.Component{
 						}
 					})()}
 				</div>
-				<div className="top-page-actived-date">
+				<div className="actived-date">
 					{(() => {
 						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
 							|| this.props.doing_data.goal.fetching === true){
 							return null;
 						}else{
 							let goal_data = this.props.doing_data.goal || "";
-							let actived_date_list = this.props.actived_date || "";
+							let actived_date_list = this.props.actived_date.date || "";
 							if(!goal_data.create_date || !actived_date_list){
 								return;
 							}
@@ -234,29 +241,71 @@ class HomePage extends React.Component{
 								let datetime = new Date();
 								datetime.setDate(datetime.getDate() - 90);
 								let day = datetime.getDate();
+								let two_digits_day = date_zello_fill(day);
 								let month = datetime.getMonth() + 1;
+								let two_digits_month = date_zello_fill(month);
 								let year = datetime.getFullYear();
 								let month_last_day = new Date(year, month, 0);
+								let index = 0;
 								month_last_day = month_last_day.getDate();
 
-								for(let i = 1; i <= 13; i += 1){
-									for(let j = 1; j <= 7; j += 1){
-										console.log(year + "/" + month + "/" + day);
+								let date_list = new Array(7);
+								for(let i = 0; i <= 6; i +=1){
+									date_list[i] = {};
+									for(let k = 0; k<=12; k+=1){
+										date_list[i][k] = {}
+									}
+								}
+
+								for(let i = 0; i <= 12; i += 1){
+									for(let j = 0; j <= 6; j += 1){
+										let date_str = year + "/" + two_digits_month + "/" + two_digits_day;
+										date_list[j][i]["date"] = date_str;
+										console.log(date_list[j][i]["date"]);
+										if(this.props.actived_date["date"][index] === date_str){
+											index += 1;
+											date_list[j][i]["active"] = true;
+										}else{
+											date_list[j][i]["active"] = false;
+										}
+
 										day += 1;
+										two_digits_day = date_zello_fill(day);
+										
 										if(day > month_last_day){
 											datetime.setMonth(datetime.getMonth() + 1);
 											datetime.setDate(1);
 											day = datetime.getDate();
+											two_digits_day = date_zello_fill(day);
 											month = datetime.getMonth() + 1;
+											two_digits_month = date_zello_fill(month);
 											year = datetime.getFullYear();
 											month_last_day = new Date(year, month, 0);
 											month_last_day = month_last_day.getDate();
 										}
 									}
 								}
+								return date_list.map((items, index) => {
+									return(
+										<div className="actived-date__row" key={"acitved" + index}>
+											{(()=>{
+												return Object.keys(items).map((value, _index) => {
+													return (
+														<ActivedDate
+															data_list={items[value]}
+															index={_index}
+															key={"actived-item"+_index}
+														/>
+													)});
+											})()}
+											<div className="clear-float"></div>
+										</div>
+									)
+
+								});
 							}
 						}
-					})()};
+					})()}
 				</div>
 			</div>
 		);
