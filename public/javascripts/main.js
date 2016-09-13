@@ -14,8 +14,8 @@ let store = createStore(
 	applyMiddleware(
 		thunk,
 		webApiUtilities,
-		logger,
-		crashReporter
+		crashReporter,
+		logger
 	)
 )
 

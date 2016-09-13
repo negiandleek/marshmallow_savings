@@ -187,7 +187,7 @@ function doing_reducer(state = initial_state, action){
 
 		case goal_types.INCREMENT_MARSHMALLOWS_REQUEST:
 			var new_state = Object.assign({}, state);
-			new_state.goal.marshmallows_num += 1;
+			new_state.goal.marshmallows_num = state.goal.marshmallows_num + 1;
 			return new_state;
 
 		case goal_types.INCREMENT_MARSHMALLOWS_SUCCESS:
@@ -195,7 +195,7 @@ function doing_reducer(state = initial_state, action){
 
 		case goal_types.INCREMENT_MARSHMALLOWS_FAILURE:
 			var new_state = Object.assign({}, state);
-			new_state.goal.marshmallows_num -= 1;
+			new_state.goal.marshmallows_num = state.goal.marshmallows_num - 1;
 			return new_state;
 
 		default:

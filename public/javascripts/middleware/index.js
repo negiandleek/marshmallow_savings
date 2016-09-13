@@ -15,6 +15,5 @@ export const crash_reporter = store => next => action => {
 		return next(action);
 	} catch (err) {
 		console.error(err);
-		throw err;
 	}
 }

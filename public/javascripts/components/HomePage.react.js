@@ -18,7 +18,8 @@ class HomePage extends React.Component{
 
 		this.state = {
 			new_todo: "",
-			new_goal: ""
+			new_goal: "",
+			show_goal: false
 		};
 
 		this.change_new_goal = this.change_new_goal.bind(this);
@@ -64,23 +65,48 @@ class HomePage extends React.Component{
 						{(() => {
 							if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"){
 								return (
-									<div className="top-page-entory__goal__forms">
-										<input 
-											className="form-input-text"
-											type="text" 
-											value={this.state.new_goal}
-											placeholder = "新規目標"
-											onChange={this.change_new_goal}
-										/>
-										<input
-											className="form-input-btn"
-											type="button"
-											value="追加"
-											onClick={()=>{
-												this.props.add_goal(this.state.new_goal);
-											}}
-										/>
-									</div>
+									{(()=>{
+										if(this.state.show_goal){
+											return(
+												<div 
+													className="top-page-entory__goal__forms">
+													<span 
+														className="top-page-entory__goal__forms__content"
+														onClick={()=>{
+															this.setState({show_goal: true})
+														}} 
+													>
+													{this.state.new_goal}
+													</span>
+												</div>
+											)
+										}else{
+											return(
+												<div 
+													className="top-page-entory__goal__forms" 
+													onClick={()=>{
+														this.setState({show_goal: false});
+													}}
+												>
+													<input 
+														className="form-input-text"
+														type="text" 
+														value={this.state.new_goal}
+														placeholder = "新規目標"
+														onChange={this.change_new_goal}
+													/>
+													<input
+														className="form-input-btn"
+														type="button"
+														value="追加"
+														onClick={()=>{
+															this.props.add_goal(this.state.new_goal);
+														}}
+													/>
+												</div>
+											);
+										}
+									})()}
 								)
 							}else{
 								if(this.props.doing_data.goal.fetching === true
@@ -261,7 +287,6 @@ class HomePage extends React.Component{
 									for(let j = 0; j <= 6; j += 1){
 										let date_str = year + "/" + two_digits_month + "/" + two_digits_day;
 										date_list[j][i]["date"] = date_str;
-										console.log(date_list[j][i]["date"]);
 										if(this.props.actived_date["date"][index] === date_str){
 											index += 1;
 											date_list[j][i]["active"] = true;

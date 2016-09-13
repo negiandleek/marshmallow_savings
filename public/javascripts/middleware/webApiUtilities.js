@@ -28,7 +28,6 @@ function call_api_func (_method, endpoint, _payload) {
 					resolve(res);
 				})
 				.catch((err) => {
-					// console.log("aaaaaaaaaaa",err)
 					reject(err);
 				})
 		}else if (method === "post"){
@@ -114,7 +113,7 @@ export default store => next => action => {
 		type: request_type
 	}));
 
-	return call_api_func(method,endpoint,payload)
+	call_api_func(method,endpoint,payload)
 		.then(function(res){
 			next(action_with({
 				res: res.data,
@@ -122,12 +121,12 @@ export default store => next => action => {
 				payload: payload
 			}))
 		})
-		// .catch(function(err){
-		// 	console.log(err);
-		// 	next(action_with({
-		// 		res: err.data,
-		// 		type: failure_type,
-		// 		payload: payload
-		// 	}))
-		// })
+		.catch(function(err){
+			console.error("webApiUtilities Error",err);
+			next(action_with({
+				res: err.data,
+				type: failure_type,
+				payload: payload
+			}))
+		})
 }

@@ -4,13 +4,6 @@ export const ADD_TODO_REQUEST = "ADD_TODO_REQUEST";
 export const ADD_TODO_SUCCESS = "ADD_TODO_SUCCESS";
 export const ADD_TODO_FAILURE = "ADD_TODO_FAILURE";
 
-function add_todo_request (payload) {
-	return {
-		type: ADD_TODO_REQUEST,
-		payload: payload
-	}
-}
-
 function add_todo_api (endpoint, method, payload){
 	return{
 		[CALL_API]: {
@@ -30,7 +23,6 @@ export function add_todo (goal_id, value){
 	};
 
 	return (dispatch, getState) => {
-		dispatch(add_todo_request(payload));
 		dispatch(add_todo_api("todo","post", payload))
 	}
 }
@@ -53,13 +45,6 @@ export const UPDATE_TODO_REQUEST = "UPDATE_TODO_REQUEST";
 export const UPDATE_TODO_SUCCESS = "UPDATE_TODO_SUCCESS";
 export const UPDATE_TODO_FAILURE = "UPDATE_TODO_FAILURE";
 
-function update_todo_request (payload) {
-	return {
-		type: UPDATE_TODO_REQUEST,
-		payload: payload,
-	}
-}
-
 function update_todo_api (endpoint, method, payload){
 	return{
 		[CALL_API]: {
@@ -79,7 +64,6 @@ export function update_todo (todo_id, value, index){
 	};
 
 	return (dispatch, getState) => {
-		dispatch(update_todo_request(payload));
 		dispatch(update_todo_api("todo","put", payload))
 	}
 }
@@ -87,13 +71,6 @@ export function update_todo (todo_id, value, index){
 export const DELETE_TODO_REQUEST = "DELETE_TODO_REQUEST";
 export const DELETE_TODO_SUCCESS = "DELETE_TODO_SUCCESS";
 export const DELETE_TODO_FAILURE = "DELETE_TODO_FAILURE";
-
-function delete_todo_request (payload) {
-	return {
-		type: DELETE_TODO_REQUEST,
-		payload: payload,
-	}
-}
 
 function delete_todo_api (endpoint, method, payload){
 	return{
@@ -113,7 +90,6 @@ export function delete_todo (todo_id, index){
 	};
 
 	return (dispatch, getState) => {
-		dispatch(delete_todo_request(payload));
 		dispatch(delete_todo_api("todo","delete", payload))
 	}
 }
@@ -121,13 +97,6 @@ export function delete_todo (todo_id, index){
 export const ACHIEVE_TODO_REQUEST = "ACHIEVE_TODO_REQUEST";
 export const ACHIEVE_TODO_SUCCESS = "ACHIEVE_TODO_SUCCESS";
 export const ACHIEVE_TODO_FAILURE = "ACHIEVE_TODO_FAILURE";
-
-function achieve_todo_request (payload) {
-	return {
-		type: ACHIEVE_TODO_REQUEST,
-		payload: payload,
-	}
-}
 
 function achieve_todo_api (endpoint, method, payload){
 	return{
@@ -147,7 +116,6 @@ export function achieve_todo (todo_id, index){
 	};
 
 	return (dispatch, getState) => {
-		dispatch(achieve_todo_request(payload));
 		dispatch(achieve_todo_api("achieve_todo","post", payload))
 	}
 }
