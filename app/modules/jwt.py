@@ -4,8 +4,9 @@ import jwt;
 import json;
 import pymysql.cursors;
 from config.db import connection;
+import config.router as root;
 from app.modules.error import UnauthenticationError;
-from bottle import HTTPResponse;
+from bottle import HTTPResponse, redirect;
 
 with open("./app/env/private.pem","rb") as f:
 		private_pem = f.read();
@@ -46,7 +47,7 @@ def is_valid_jwt (str_jwt):
 
 	except Exception as e:
 		print("JwtError:", str(e))
-		
+		redirect(root.SERVER_URL)
 		return;
 
 	try:
@@ -55,7 +56,8 @@ def is_valid_jwt (str_jwt):
 			
 	except UnauthenticationError as e:
 		print("UnauthenticationError",str(e));
-		
+		redirect(root.SERVER_URL);
+
 		return;
 
 	return state, user_id;

@@ -57,6 +57,7 @@ function update_todo_api (endpoint, method, payload){
 }
 
 export function update_todo (todo_id, value, index){
+	console.log(value);
 	let payload = {
 		todo_id: todo_id,
 		value: value,
@@ -117,5 +118,19 @@ export function achieve_todo (todo_id, index){
 
 	return (dispatch, getState) => {
 		dispatch(achieve_todo_api("achieve_todo","post", payload))
+	}
+}
+
+export const TOGGLE_TODO_STATE = "TOGGLE_TODO_STATE";
+
+export function toggle_todo_state (boolean,index) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: TOGGLE_TODO_STATE,
+			payload: {
+				boolean,
+				index
+			}
+		});
 	}
 }

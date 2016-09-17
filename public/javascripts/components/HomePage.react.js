@@ -19,12 +19,19 @@ class HomePage extends React.Component{
 		this.state = {
 			new_todo: "",
 			new_goal: "",
-			show_goal: false
+			is_show_goal: false,
+			is_show_new_todo: false,
+			is_show_todo: false
 		};
 
 		this.change_new_goal = this.change_new_goal.bind(this);
 		this.change_new_todo = this.change_new_todo.bind(this);
 		this.click_to_add_todo = this.click_to_add_todo.bind(this);
+		this.showing_goal_changed_true = this.showing_goal_changed_true.bind(this);
+		this.showing_goal_changed_false = this.showing_goal_changed_false.bind(this);
+		this.showing_new_todo_changed_false = this.showing_new_todo_changed_false.bind(this);
+		this.showing_new_todo_changed_true = this.showing_new_todo_changed_true.bind(this);
+		this.toggle_todo_state = this.toggle_todo_state.bind(this);
 	}
 	change_new_goal (e) {
 		this.setState({
@@ -32,7 +39,6 @@ class HomePage extends React.Component{
 		});
 	}
 	change_new_todo (e) {
-		// let inputed_new_value = e.target.value;
 		this.setState({
 			new_todo: e.target.value
 		});
@@ -48,6 +54,47 @@ class HomePage extends React.Component{
 			alert("入力してください");
 		}
 	}
+	showing_goal_changed_true () {
+		if(this.state.is_show_goal)return;
+
+		this.setState({
+			is_show_goal: true
+		})
+	}
+	showing_goal_changed_false () {
+		if(!this.state.is_show_goal)return;
+
+		this.setState({
+			is_show_goal: false
+		})
+	}
+	showing_new_todo_changed_true () {
+		if(this.state.is_show_new_todo)return;
+
+		this.setState({
+			is_show_new_todo: true
+		})
+	}
+	showing_new_todo_changed_false () {
+		if(!this.state.is_show_new_todo)return;
+
+		this.setState({
+			is_show_new_todo: false
+		})
+	}
+	toggle_todo_state (boolean, index) {
+		if(index !== -1){
+			this.props.toggle_todo_state(boolean,index)
+			this.setState({
+				is_show_todo: true
+			})
+		}else if(this.state.is_show_todo && index === -1){
+			this.props.toggle_todo_state(boolean,index)
+			this.setState({
+				is_show_todo: false
+			})
+		}
+	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.doing_data.goal.id !== nextProps.doing_data.goal.id){
 			this.props.get_actived_date(nextProps.doing_data.goal.id);
@@ -55,59 +102,50 @@ class HomePage extends React.Component{
 	}
 	render(){
 		return(
-			<div className="top-page">
-				<div className=""></div>
+			<div 
+				className="top-page"
+				onClick={()=>{
+					this.showing_goal_changed_false();
+					this.showing_new_todo_changed_false();
+					this.toggle_todo_state(0,-1)
+				}}>
 				<div className="top-page-entory">
-					<div className="top-page-entory__goal">
+					<div 
+						className="top-page-entory__goal" 
+						onClick={(e)=>{
+							e.stopPropagation();
+							this.showing_new_todo_changed_false();
+							this.toggle_todo_state(0,-1)
+						}}>
 						<header className="top-page-entory__goal__header">
 							<p>ゴール</p>
 						</header>
 						{(() => {
 							if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"){
-								return (
-									{(()=>{
-										if(this.state.show_goal){
-											return(
-												<div 
-													className="top-page-entory__goal__forms">
-													<span 
-														className="top-page-entory__goal__forms__content"
-														onClick={()=>{
-															this.setState({show_goal: true})
-														}} 
-													>
-													{this.state.new_goal}
-													</span>
-												</div>
-											)
-										}else{
-											return(
-												<div 
-													className="top-page-entory__goal__forms" 
-													onClick={()=>{
-														this.setState({show_goal: false});
-													}}
-												>
-													<input 
-														className="form-input-text"
-														type="text" 
-														value={this.state.new_goal}
-														placeholder = "新規目標"
-														onChange={this.change_new_goal}
-													/>
-													<input
-														className="form-input-btn"
-														type="button"
-														value="追加"
-														onClick={()=>{
-															this.props.add_goal(this.state.new_goal);
-														}}
-													/>
-												</div>
-											);
-										}
-									})()}
-								)
+								return(
+									<div 
+										className="top-page-entory__goal__forms" 
+										onClick={()=>{
+											this.setState({is_show_goal: false});
+										}}
+									>
+										<input 
+											className="form-input-text"
+											type="text" 
+											value={this.state.new_goal}
+											placeholder = "新規目標"
+											onChange={this.change_new_goal}
+										/>
+										<input
+											className="form-input-btn"
+											type="button"
+											value="追加"
+											onClick={()=>{
+												this.props.add_goal(this.state.new_goal);
+											}}
+										/>
+									</div>
+								);
 							}else{
 								if(this.props.doing_data.goal.fetching === true
 									|| this.props.doing_data.goal.fetching === 1){
@@ -120,6 +158,19 @@ class HomePage extends React.Component{
 											/>
 										</div>
 									)
+								}else if(!this.state.is_show_goal){
+									return(
+										<div className="top-page-entory__goal__forms">
+											<span 
+												className="top-page-entory__goal__forms__content"
+												onClick={()=>{
+													this.setState({is_show_goal: true})
+												}} 
+											>
+											{this.props.doing_data.goal.value}
+											</span>
+										</div>
+									);
 								}else{
 									return(
 										<div className="top-page-entory__goal__forms">
@@ -139,6 +190,9 @@ class HomePage extends React.Component{
 													if(!this.props.doing_data.goal.value){
 														alert("goalを入力してください")
 													}else{
+														this.setState({
+															is_show_goal: false
+														})
 														this.props.update_goal(
 															this.props.doing_data.goal.id, 
 															this.props.doing_data.goal.value
@@ -151,6 +205,9 @@ class HomePage extends React.Component{
 												type="button"
 												value="削除"
 												onClick={()=>{
+													this.setState({
+														is_show_goal: false
+													})
 													this.props.delete_goal(this.props.doing_data.goal.id)
 												}}
 											/>
@@ -166,33 +223,65 @@ class HomePage extends React.Component{
 							return null;
 						}else{
 							return(
-								<div className="top-page-entory__todos">
+								<div 
+									className="top-page-entory__todos"
+									onClick={(e)=>{
+										e.stopPropagation();
+										this.showing_goal_changed_false();
+										this.toggle_todo_state(0,-1)
+									}}>
 									<header className="top-page-entory__todos__header">
 										<p>タスク</p>
 									</header>
-									<div className="top-page-entory__todos__forms">
-										<input 
-											className="form-input-text"
-											type="text"
-											value={this.state.new_todo}
-											placeholder ="新規タスク"
-											ref = "add_todo_value"
-											onChange={this.change_new_todo}
-										/>
-										<input 
-											className="form-input-btn"
-											type="button"
-											value="追加"
-											onClick = {this.click_to_add_todo}
-										/>
-									</div>
-									<ul className="top-page-entory__todos__wrapper">
+									{(()=>{
+										if(!this.state.is_show_new_todo){
+											return(
+												<div className="top-page-entory__todos__forms">
+													<span 
+														className="top-page-entory__todos__forms__icon"
+														onClick={this.showing_new_todo_changed_true}>
+														+
+													</span>
+												</div>
+											)
+										}else{
+											return(
+												<div className="top-page-entory__todos__forms">
+												<input 
+													className="form-input-text"
+													type="text"
+													value={this.state.new_todo}
+													placeholder ="新規タスク"
+													ref = "add_todo_value"
+													onChange={this.change_new_todo}
+												/>
+												<input 
+													className="form-input-btn"
+													type="button"
+													value="追加"
+													onClick = {()=>{
+														this.showing_new_todo_changed_false();
+														this.click_to_add_todo();
+													}}
+												/>
+											</div>
+											)
+										}
+									})()}
+									<ul 
+										className="top-page-entory__todos__list"
+										onClick={(e)=>{
+											this.showing_goal_changed_false();
+											this.showing_new_todo_changed_false();
+											e.stopPropagation();
+										}}
+									>
 										{(()=>{
 											if(this.props.doing_data.todos instanceof Array){
 												return this.props.doing_data.todos.map((items, index)=>{
 													if(items.fetching){
 														return (
-															<li className="top-page-entory__todos__wrapper__item" key={"todo-" + index}>
+															<li className="top-page-entory__todos__list__item" key={"todo-" + index}>
 																<input 
 																	className="form-input-text--fetching"
 																	type="text"
@@ -211,6 +300,7 @@ class HomePage extends React.Component{
 																update_todo = {this.props.update_todo}
 																delete_todo = {this.props.delete_todo}
 																achieve_todo = {this.props.achieve_todo}
+																toggle_todo_state = {this.toggle_todo_state}
 															/>
 														)
 													}

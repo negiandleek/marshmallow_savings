@@ -64,6 +64,7 @@ function mapDispatchToProps(dispatch){
 		delete_todo: bindActionCreators(todo.delete_todo, dispatch),
 		change_todo: bindActionCreators(todo.change_todo, dispatch),
 		achieve_todo: bindActionCreators(todo.achieve_todo, dispatch),
+		toggle_todo_state: bindActionCreators(todo.toggle_todo_state, dispatch),
 		add_goal: bindActionCreators(goal.add_goal, dispatch),
 		update_goal: bindActionCreators(goal.update_goal, dispatch),
 		delete_goal: bindActionCreators(goal.delete_goal, dispatch),

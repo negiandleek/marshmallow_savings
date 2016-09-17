@@ -14,16 +14,19 @@ let store = createStore(
 	applyMiddleware(
 		thunk,
 		webApiUtilities,
-		crashReporter,
 		logger
 	)
 )
 
 document.addEventListener("DOMContentLoaded", () => {
-	ReactDOM.render(
-		<Provider store={store}>
-			<App />
-		</Provider>,
-		document.getElementById("root")
-	)
+	try{
+		ReactDOM.render(
+			<Provider store={store}>
+				<App />
+			</Provider>,
+			document.getElementById("root")
+		)
+	}catch(err){
+		console.log(err);
+	}
 })

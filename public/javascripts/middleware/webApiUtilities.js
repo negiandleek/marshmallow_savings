@@ -110,7 +110,8 @@ export default store => next => action => {
 	}
 
 	next(action_with({
-		type: request_type
+		type: request_type,
+		payload: payload
 	}));
 
 	call_api_func(method,endpoint,payload)
@@ -121,12 +122,12 @@ export default store => next => action => {
 				payload: payload
 			}))
 		})
-		.catch(function(err){
-			console.error("webApiUtilities Error",err);
-			next(action_with({
-				res: err.data,
-				type: failure_type,
-				payload: payload
-			}))
-		})
+		// .catch(function(err){
+		// 	console.error("API Error",err);
+		// 	next(action_with({
+		// 		res: err.data,
+		// 		type: failure_type,
+		// 		payload: payload
+		// 	}))
+		// })
 }

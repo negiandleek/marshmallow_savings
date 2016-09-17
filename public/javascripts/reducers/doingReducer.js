@@ -11,13 +11,17 @@ function doing_reducer(state = initial_state, action){
 	switch (action.type) {
 		case doing_types.GET_DOING_REQUEST:
 			return state;
-			// return Object.assign({},state, {
-			// 	goal: "fetching",
-			// 	todos: "fetching"
-			// });
 
 		case doing_types.GET_DOING_SUCCESS:
 			var data = action.res;
+			
+			var i = 0;
+			console.log(data.todos.length);
+			while(data.todos.length > i){
+				data["todos"][i]["state"] = 0;
+				i += 1;
+			}
+
 			return Object.assign({}, state, {
 				goal: data.goal,
 				todos: data.todos
@@ -28,14 +32,22 @@ function doing_reducer(state = initial_state, action){
 
 		case todo_types.ADD_TODO_REQUEST:
 			var value = action.payload.value;
-			var data = [{value: value, id: 0, achieve: 0, fetching: true}];
+			var data = [{value: value, id: 0, achieve: 0, fetching: true, state: 0}];
 			var new_state = data.concat(state.todos);
+
 			return Object.assign({}, state, {
 				todos: new_state
 			});
 
 		case todo_types.ADD_TODO_SUCCESS:
 			var data = action.res;
+
+			var i = 0;
+			while(data.todos.length > i){
+				data["todos"][i]["state"] = 0;
+				i += 1;
+			}
+
 			return Object.assign({}, state, {
 				todos: data.todos
 			});
@@ -55,11 +67,12 @@ function doing_reducer(state = initial_state, action){
 			}); 
 
 		case todo_types.UPDATE_TODO_REQUEST:
+			console.log(action.payload);
 			var value = action.payload.value;
 			var id = action.payload.todo_id;
 			var index = action.payload.index;
 
-			var data = {value: value, id: id, achieve: 0, fetching: true};
+			var data = {value: value, id: id, achieve: 0, fetching: true, state: 0};
 			
 			var new_state = state.todos.concat();	
 			new_state[index] = data;
@@ -73,7 +86,7 @@ function doing_reducer(state = initial_state, action){
 			var id = action.payload.todo_id;
 			var index = action.payload.index;
 
-			var data = {value: value, id: id, achieve: 0, fetching: false};
+			var data = {value: value, id: id, achieve: 0, fetching: false, state: 0};
 
 			var new_state = state.todos.concat();
 
@@ -123,6 +136,24 @@ function doing_reducer(state = initial_state, action){
 		case todo_types.ACHIEVE_TODO_FAILURE:
 			return state;
 
+		case todo_types.TOGGLE_TODO_STATE:
+			console.log(action.payload);
+			var index = action.payload.index;
+			var boolean = action.payload.boolean;
+
+			var new_state = Object.assign({},state);
+
+			var i = 0;
+			while(new_state["todos"].length > i){
+				new_state["todos"][i]["state"] = 0;
+				i+=1;
+			}
+
+			if(index !== -1){
+				new_state["todos"][index]["state"] = boolean;
+			}
+
+			return new_state;
 
 		case goal_types.CHANGE_GOAL:
 			var value = action.payload.value;
