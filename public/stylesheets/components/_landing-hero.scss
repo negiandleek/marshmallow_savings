@@ -1,0 +1,10 @@
+.landing-hero{
+	height: 100%;
+	background-color: $light-orange;
+	&__wrapper{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%);
+	}
+}

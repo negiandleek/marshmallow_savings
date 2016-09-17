@@ -1,0 +1,18 @@
+.top-page-marshmallow{
+	height: 240px;
+	width: 320px;
+	margin: auto;
+	text-align: center;
+	&__wrapper{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		color: $orange;
+		transform: translateX(-50%) translateY(-50%);
+		&__num{
+			font-family: degital;
+		    font-size: 8em;
+			line-height: 96px;
+		}
+	}
+}

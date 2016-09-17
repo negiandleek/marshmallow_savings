@@ -1,0 +1,23 @@
+.top-page-entory-todos{
+	width: 100%;
+	text-align: center;
+	color: $black;
+	margin-bottom: 24px;
+	&__header{
+		margin-bottom: 8px;
+	}
+	&__forms{
+
+	}
+	&__list{
+		width: 364px;
+		margin: auto;
+		text-align: left;
+		&__item{
+			display: block;
+			font-size: 16px;
+			border-bottom: 1px solid $gray;
+			margin-bottom: 8px;
+		}
+	}
+}

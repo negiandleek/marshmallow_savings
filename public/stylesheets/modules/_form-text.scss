@@ -1,0 +1,18 @@
+.form-text{
+	outline: none;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: all .3s;
+    padding: 0.5em;
+    margin-bottom: 5px;
+    line-height: 18px;
+    &:focus{
+        box-shadow: 0 0 3px $orange;
+        border: 1px solid $orange;
+    }
+}
+.form-text-todo{
+	@extend .form-text;
+	width: 238px;
+}

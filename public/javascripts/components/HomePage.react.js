@@ -110,34 +110,59 @@ class HomePage extends React.Component{
 					this.toggle_todo_state(0,-1)
 				}}>
 				<div className="top-page-entory">
+					{(()=>{
+						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
+							|| this.props.doing_data.goal.fetching === true){
+							return null;
+						}else{
+							let num = date_zello_fill(this.props.doing_data.goal.marshmallows_num)
+							return (
+								<div className="top-page-marshmallow">
+									<div className="top-page-marshmallow__wrapper">
+										<div className="top-page-marshmallow__wrapper__num">
+											{num}
+										</div>
+										<input 
+											className="form-btn"
+											type="button" 
+											value="nice fight"
+											onClick={()=>{
+												this.props.incremnet_marshmallows(this.props.doing_data.goal.id)
+											}}
+										/>
+									</div>
+								</div>
+							)
+						}
+					})()}
 					<div 
-						className="top-page-entory__goal" 
+						className="top-page-entory-goal" 
 						onClick={(e)=>{
 							e.stopPropagation();
 							this.showing_new_todo_changed_false();
 							this.toggle_todo_state(0,-1)
 						}}>
-						<header className="top-page-entory__goal__header">
-							<p>ゴール</p>
+						<header className="top-page-entory-goal__header">
+							<h2>ゴール</h2>
 						</header>
 						{(() => {
 							if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"){
 								return(
 									<div 
-										className="top-page-entory__goal__forms" 
+										className="top-page-entory-goal__forms" 
 										onClick={()=>{
 											this.setState({is_show_goal: false});
 										}}
 									>
 										<input 
-											className="form-input-text"
+											className="form-text"
 											type="text" 
 											value={this.state.new_goal}
 											placeholder = "新規目標"
 											onChange={this.change_new_goal}
 										/>
 										<input
-											className="form-input-btn"
+											className="form-btn"
 											type="button"
 											value="追加"
 											onClick={()=>{
@@ -150,9 +175,9 @@ class HomePage extends React.Component{
 								if(this.props.doing_data.goal.fetching === true
 									|| this.props.doing_data.goal.fetching === 1){
 									return (
-										<div className="top-page-entory__goal__forms">
+										<div className="top-page-entory-goal__forms">
 											<input
-												className="form-input-text"
+												className="form-text"
 												type="text" 
 												value={this.props.doing_data.goal.value}
 											/>
@@ -160,22 +185,21 @@ class HomePage extends React.Component{
 									)
 								}else if(!this.state.is_show_goal){
 									return(
-										<div className="top-page-entory__goal__forms">
-											<span 
-												className="top-page-entory__goal__forms__content"
+										<div className="top-page-entory-goal__forms">
+											<p 
 												onClick={()=>{
 													this.setState({is_show_goal: true})
-												}} 
+												}}
 											>
 											{this.props.doing_data.goal.value}
-											</span>
+											</p>
 										</div>
 									);
 								}else{
 									return(
-										<div className="top-page-entory__goal__forms">
+										<div className="top-page-entory-goal__forms">
 											<input
-												className="form-input-text"
+												className="form-text"
 												type="text" 
 												value={this.props.doing_data.goal.value}
 												onChange={(e) => {
@@ -183,7 +207,7 @@ class HomePage extends React.Component{
 												}}
 											/>
 											<input
-												className="form-input-btn"
+												className="form-btn"
 												type="button"
 												value="変更"
 												onClick = {()=>{
@@ -201,7 +225,7 @@ class HomePage extends React.Component{
 												}}
 											/>
 											<input
-												className="form-input-btn"
+												className="form-btn"
 												type="button"
 												value="削除"
 												onClick={()=>{
@@ -224,39 +248,41 @@ class HomePage extends React.Component{
 						}else{
 							return(
 								<div 
-									className="top-page-entory__todos"
+									className="top-page-entory-todos"
 									onClick={(e)=>{
 										e.stopPropagation();
 										this.showing_goal_changed_false();
 										this.toggle_todo_state(0,-1)
 									}}>
-									<header className="top-page-entory__todos__header">
-										<p>タスク</p>
+									<header className="top-page-entory-todos__header">
+										<h2>タスク</h2>
 									</header>
 									{(()=>{
 										if(!this.state.is_show_new_todo){
 											return(
-												<div className="top-page-entory__todos__forms">
-													<span 
-														className="top-page-entory__todos__forms__icon"
-														onClick={this.showing_new_todo_changed_true}>
-														+
-													</span>
+												<div 
+													className="top-page-entory-todos__forms"
+													onClick={this.showing_new_todo_changed_true}
+												>
+													<svg fill="#000000" height="36" viewBox="0 0 24 24" width="36" xmlns="http://www.w3.org/2000/svg">
+													    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+													    <path d="M0 0h24v24H0z" fill="none"/>
+													</svg>
 												</div>
 											)
 										}else{
 											return(
-												<div className="top-page-entory__todos__forms">
+												<div className="top-page-entory-todos__forms">
 												<input 
-													className="form-input-text"
+													className="form-text"
 													type="text"
 													value={this.state.new_todo}
 													placeholder ="新規タスク"
 													ref = "add_todo_value"
 													onChange={this.change_new_todo}
 												/>
-												<input 
-													className="form-input-btn"
+												<input
+													className="form-btn"
 													type="button"
 													value="追加"
 													onClick = {()=>{
@@ -269,7 +295,7 @@ class HomePage extends React.Component{
 										}
 									})()}
 									<ul 
-										className="top-page-entory__todos__list"
+										className="top-page-entory-todos__list"
 										onClick={(e)=>{
 											this.showing_goal_changed_false();
 											this.showing_new_todo_changed_false();
@@ -281,9 +307,9 @@ class HomePage extends React.Component{
 												return this.props.doing_data.todos.map((items, index)=>{
 													if(items.fetching){
 														return (
-															<li className="top-page-entory__todos__list__item" key={"todo-" + index}>
+															<li className="top-page-entory-todos__list__item" key={"todo-" + index}>
 																<input 
-																	className="form-input-text--fetching"
+																	className="form-text--fetching"
 																	type="text"
 																	value={items.value}
 																	onChange={() => {}}
@@ -314,28 +340,9 @@ class HomePage extends React.Component{
 							);
 						}
 					})()}
-					{(()=>{
-						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
-							|| this.props.doing_data.goal.fetching === true){
-							return null;
-						}else{
-							return (
-								<div className="top-page-entory__marshmallow">
-									{this.props.doing_data.goal.marshmallows_num}
-									<input 
-										className="form-input-btn"
-										type="button" 
-										value="nice fight"
-										onClick={()=>{
-											this.props.incremnet_marshmallows(this.props.doing_data.goal.id)
-										}}
-									/>
-								</div>
-							)
-						}
-					})()}
 				</div>
 				<div className="actived-date">
+					<div className="actived-date__wrapper">
 					{(() => {
 						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
 							|| this.props.doing_data.goal.fetching === true){
@@ -402,7 +409,7 @@ class HomePage extends React.Component{
 								}
 								return date_list.map((items, index) => {
 									return(
-										<div className="actived-date__row" key={"acitved" + index}>
+										<div className="actived-date__wrapper__row" key={"acitved" + index}>
 											{(()=>{
 												return Object.keys(items).map((value, _index) => {
 													return (
@@ -421,6 +428,7 @@ class HomePage extends React.Component{
 							}
 						}
 					})()}
+					</div>
 				</div>
 			</div>
 		);

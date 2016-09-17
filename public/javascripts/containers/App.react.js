@@ -20,26 +20,24 @@ class App extends Component {
 	}
 	render () {
 		return (
-			<div className="root">
-				<div className="main">
-					{(() => {
-						if(this.props.is_auth === true){
-							return <HomePage
-									{...this.props} 
-									// get_doing = {this.props.get_doing}
-									// doing_data = {this.props.doing_data}
-									// add_todo = {this.props.add_todo}
-								/>
-						}else{
-							return <LandingPage 
-								{...this.props}
-								// is_auth = {this.props.is_auth}
-								// auth_action = {this.props.auth_action}
-								// check_jwt = {this.props.check_jwt}
+			<div className="main">
+				{(() => {
+					if(this.props.is_auth === true){
+						return <HomePage
+								{...this.props} 
+								// get_doing = {this.props.get_doing}
+								// doing_data = {this.props.doing_data}
+								// add_todo = {this.props.add_todo}
 							/>
-						}
-					})()}
-				</div>
+					}else{
+						return <LandingPage 
+							{...this.props}
+							// is_auth = {this.props.is_auth}
+							// auth_action = {this.props.auth_action}
+							// check_jwt = {this.props.check_jwt}
+						/>
+					}
+				})()}
 			</div>
 		);
 	}

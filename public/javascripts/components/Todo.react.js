@@ -16,9 +16,12 @@ class Todo extends React.Component{
 		return (()=>{
 			if(!this.props.items.state){
 				return(
-					<li className="top-page-entory__todos__wrappr__item">
+					<li 
+						className="top-page-entory-todos__list__item" 
+						onClick={this.showing_todo_changed_true}
+					>
 						<input 
-							className = "form-input-checkbox"
+							className = "form-checkbox"
 							type = "checkbox"
 							checked = {(()=>{
 								if(this.props.items.achieve){
@@ -31,25 +34,41 @@ class Todo extends React.Component{
 								this.props.achieve_todo(this.props.items.id, this.props.index)
 							}}
 						/>
-						<span
-							className="top-page-entory__todos__wrappr__item__content"
-							onClick={this.showing_todo_changed_true}
-						>
-							{this.props.items.value}
-						</span>
+						{(()=>{
+							if(this.props.items.achieve){
+								return(
+									<s>
+										<span
+											className="top-page-entory-todos__list__item__content"
+										>
+											{this.props.items.value}
+										</span>
+									</s>
+								)
+							}else{
+								return(
+									<span
+										className="top-page-entory-todos__list__item__content"
+										onClick={this.showing_todo_changed_true}
+									>
+										{this.props.items.value}
+									</span>
+								)
+							}
+						})()}
 
 					</li>
 				);
 			}else{
 				return(
 					<li 
-						className="top-page-entory__todos__wrappr__item"
+						className="top-page-entory-todos__list__item"
 						onClick={(e)=>{
 							e.stopPropagation();
 						}}
 					>
 						<input
-							className = "form-input-text"
+							className = "form-text-todo"
 							type = "text"
 							value = {this.props.items.value}
 							onChange = {(e) => {
@@ -57,7 +76,7 @@ class Todo extends React.Component{
 							}}
 						/>
 						<input 
-							className = "form-input-btn"
+							className = "form-btn"
 							type = "button"
 							value = "変更"
 							onClick = {()=> {
@@ -66,7 +85,7 @@ class Todo extends React.Component{
 							}}
 						/>
 						<input
-							className = "form-input-btn"
+							className = "form-btn"
 							type = "button"
 							value = "削除"
 							onClick = {()=> {

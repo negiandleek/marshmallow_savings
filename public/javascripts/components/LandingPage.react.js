@@ -5,6 +5,11 @@ class Landing extends React.Component{
 		super(props);
 		// this.auth_action = this.auth_action.bind(this);
 		this.auto_auth();
+		this.state = {
+			style: {
+				height: window.innerHeight
+			}
+		}
 	}
 	auto_auth () {
 		let url = window.location.search;
@@ -29,18 +34,24 @@ class Landing extends React.Component{
 	render(){
 		return(
 			<div className="landing">
-				<div className="landing-symbol">
-					<figure className="landing-simbol__item">
-					</figure>
-				</div>
-				<div className="landing-entory">
-					<div className="landing-entory__sign-btn">
-						<input 
-							className="form-sign-btn"
-							type="button" 
-							value="サインイン/サインアップ" 
-							onClick={this.props.auth_action.bind(this)}
-						/>
+				<div className="landing-hero" style={this.state.style}>
+					<header className="landing-header">
+						<h1>マシュマロ貯金</h1>
+						<p>昨日に比べてより良くなったかどうかを管理するシンプルなサービスです</p>
+					</header>
+					<div className="landing-hero__wrapper">
+						<div className="landing-symbol">
+							<figure className="landing-simbol__icon">
+							</figure>
+						</div>
+						<div className="landing-entory">
+							<input 
+								className="form-btn-sign"
+								type="button" 
+								value="twitterでサインイン/サインアップ" 
+								onClick={this.props.auth_action.bind(this)}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
