@@ -1,8 +1,9 @@
-from bottle import request, redirect;
+from bottle import request, HTTPResponse;
 from app.modules import jwt;
 import config.router as root;
 import pymysql.cursors;
 import datetime;
+import json;
 from app.api.goal import get_active_goal;
 from config.db import connection;
 from functools import wraps;
@@ -13,7 +14,16 @@ def req_auth (func):
 	def wrapper():
 		payload = request.json["payload"];
 		__jwt = payload["jwt"];
-		status, user_id = jwt.is_valid_jwt(__jwt);
+		
+		try:
+			status, user_id = jwt.is_valid_jwt(__jwt);
+		except:
+			json_data = {
+				"api":{"status": "UnAuthentication", "message": "failure authentication", "data": None}
+			}
+			parsed_json = json.dumps(json_data);
+			r = HTTPResponse(status=301, body=parsed_json, content_type = "application/json");
+			return r;
 
 		if status:
 			# last_update確認して日にちをまたいでいたらtodoのachiveをFalseにする
@@ -37,9 +47,6 @@ def req_auth (func):
 					connection.commit();
 
 			result = func(user_id);
-
-		else :
-			redirect(root.SERVER_URL);
 
 		return result;
 	return wrapper;

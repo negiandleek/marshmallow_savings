@@ -28,6 +28,9 @@ function call_api_func (_method, endpoint, _payload) {
 					resolve(res);
 				})
 				.catch((err) => {
+					if(err.status==301){
+						location.href = "./";
+					}
 					reject(err);
 				})
 		}else if (method === "post"){
@@ -37,6 +40,9 @@ function call_api_func (_method, endpoint, _payload) {
 					resolve(res);
 				})
 				.catch((err) => {
+					if(err.status==301){
+						location.href = "./";
+					}
 					reject(err);
 				})
 		}else if (method === "put"){
@@ -50,6 +56,9 @@ function call_api_func (_method, endpoint, _payload) {
 					}
 				})
 				.catch((err) => {
+					if(err.status==301){
+						location.href = "./";
+					}
 					reject(err);
 				})
 		}else if (method === "delete"){
@@ -63,6 +72,9 @@ function call_api_func (_method, endpoint, _payload) {
 					resolve(res)
 				})
 				.catch((err) => {
+					if(err.status==301){
+						location.href = "./";
+					}
 					reject(err);
 				})
 		}

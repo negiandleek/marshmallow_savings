@@ -7,6 +7,10 @@ def get_active_goal (user_id):
 
 		__result = cursor.execute(sql,(user_id));
 		result = cursor.fetchone();
+
+		if result is None:
+			return result;
+			
 		result["create_date"] = result["create_date"].strftime("%Y-%m-%d");
 
 	return result;
@@ -42,6 +46,7 @@ def delete_goal (goal_id):
 					WHERE id = %s;"""
 
 		cursor.execute(sql,(goal_id));
+		connection.commit();
 
 def achieve_goal (goal_id):
 	with connection.cursor() as cursor:

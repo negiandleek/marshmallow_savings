@@ -47,7 +47,7 @@ def is_valid_jwt (str_jwt):
 
 	except Exception as e:
 		print("JwtError:", str(e))
-		redirect(root.SERVER_URL)
+
 		return;
 
 	try:
@@ -56,7 +56,6 @@ def is_valid_jwt (str_jwt):
 			
 	except UnauthenticationError as e:
 		print("UnauthenticationError",str(e));
-		redirect(root.SERVER_URL);
 
 		return;
 

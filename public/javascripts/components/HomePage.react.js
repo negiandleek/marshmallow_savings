@@ -96,7 +96,7 @@ class HomePage extends React.Component{
 		}
 	}
 	componentWillReceiveProps(nextProps){
-		if(this.props.doing_data.goal.id !== nextProps.doing_data.goal.id){
+		if(this.props.doing_data.goal.id !== nextProps.doing_data.goal.id && nextProps.doing_data.goal.id){
 			this.props.get_actived_date(nextProps.doing_data.goal.id);
 		};
 	}
@@ -111,29 +111,32 @@ class HomePage extends React.Component{
 				}}>
 				<div className="top-page-entory">
 					{(()=>{
-						if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
-							|| this.props.doing_data.goal.fetching === true){
-							return null;
-						}else{
-							let num = date_zello_fill(this.props.doing_data.goal.marshmallows_num)
-							return (
-								<div className="top-page-marshmallow">
-									<div className="top-page-marshmallow__wrapper">
-										<div className="top-page-marshmallow__wrapper__num">
-											{num}
-										</div>
-										<input 
-											className="form-btn"
-											type="button" 
-											value="nice fight"
-											onClick={()=>{
-												this.props.incremnet_marshmallows(this.props.doing_data.goal.id)
-											}}
-										/>
+						let num = this.props.doing_data.goal.marshmallows_num || 0;
+						let dabule_num = date_zello_fill(num)
+						return (
+							<div className="top-page-marshmallow">
+								<div className="top-page-marshmallow__wrapper">
+									<div className="top-page-marshmallow__wrapper__num">
+										{dabule_num}
 									</div>
+									{(() => {
+										if(Object.prototype.toString.call(this.props.doing_data.goal).slice(8, -1) !== "Object"
+										|| this.props.doing_data.goal.fetching === true){
+											return null;
+										}else{
+											<input 
+												className="form-btn"
+												type="button" 
+												value="nice fight"
+												onClick={()=>{
+													this.props.incremnet_marshmallows(this.props.doing_data.goal.id)
+												}}
+											/>
+										}
+									})()}
 								</div>
-							)
-						}
+							</div>
+						)
 					})()}
 					<div 
 						className="top-page-entory-goal" 
