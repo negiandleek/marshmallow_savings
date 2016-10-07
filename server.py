@@ -95,7 +95,6 @@ def twitter_callback():
     		user_id = results["user_id"];
     		jwt = generate_jwt(user_id);
 
-
     redirect(root.SERVER_URL +"?jwt="+ jwt);
 
 @route("/check_jwt", method='POST')

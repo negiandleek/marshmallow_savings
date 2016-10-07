@@ -134,12 +134,12 @@ export default store => next => action => {
 				payload: payload
 			}))
 		})
-		// .catch(function(err){
-		// 	console.error("API Error",err);
-		// 	next(action_with({
-		// 		res: err.data,
-		// 		type: failure_type,
-		// 		payload: payload
-		// 	}))
-		// })
+		.catch(function(err){
+			console.error("API Error",err);
+			next(action_with({
+				res: err.data,
+				type: failure_type,
+				payload: payload
+			}))
+		})
 }
